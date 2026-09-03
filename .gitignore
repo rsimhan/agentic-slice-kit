@@ -9,3 +9,4 @@ venv/
 out/
 .pytest_cache/
 .DS_Store
+bakeoff_raw.txt

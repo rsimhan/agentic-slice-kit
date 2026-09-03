@@ -15,8 +15,8 @@ Scored on what the architecture actually needs:
 ~20 calls. A few cents. Twenty minutes of your time buys a decision you would
 otherwise make on vibes.
 
-  export OPENROUTER_API_KEY='sk-or-v1-...'      # inference key, not management
-  python3 scripts/bakeoff.py
+  cp .env.example .env      # then put your inference key on the
+  python3 scripts/bakeoff.py  # OPENROUTER_API_KEY line
 """
 import json, os, statistics, sys, time, urllib.error, urllib.request
 
@@ -47,7 +47,8 @@ CANDIDATES = [
     "mistralai/mistral-small-3.2-24b-instruct",
     "inclusionai/ling-3.0-flash",
 ]
-TRIALS = 3
+TRIALS = 5
+RAW = "bakeoff_raw.txt"   # every response, so a 0/3 tells you WHY
 
 SYSTEM = """You are a faculty reviewer gating a venture thesis before it proceeds to validation.
 
@@ -110,9 +111,22 @@ def score(text):
     return dict(parses=parses, schema=schema, blocks=blocks, specific=specific)
 
 
-print(f"{len(CANDIDATES)} candidates x {TRIALS} trials on the same weak thesis.\n")
-print(f"{'model':<44}{'parse':>6}{'schema':>7}{'block':>6}{'spec':>6}{'p50 s':>7}{'tok':>7}")
-print("-" * 83)
+PRICES = {}          # $/1M input, fetched live so ranking can weigh cost
+try:
+    _r = urllib.request.Request("https://openrouter.ai/api/v1/models",
+                                headers={"Authorization": f"Bearer {KEY}"})
+    with urllib.request.urlopen(_r, timeout=60) as _f:
+        for _m in json.load(_f)["data"]:
+            try: PRICES[_m["id"]] = float(_m["pricing"]["prompt"]) * 1e6
+            except Exception: pass
+except Exception:
+    pass
+
+raw = open(RAW, "w")
+print(f"{len(CANDIDATES)} candidates x {TRIALS} trials on the same weak thesis.")
+print(f"raw responses -> {RAW}\n")
+print(f"{'model':<44}{'parse':>6}{'schema':>7}{'block':>6}{'spec':>6}{'p50 s':>7}{'tok':>7}{'$/1M in':>8}")
+print("-" * 91)
 
 results = []
 for m in CANDIDATES:
@@ -121,20 +135,34 @@ for m in CANDIDATES:
         text, dt, tk, e = chat(m)
         if e:
             err = e; break
-        agg.append(score(text)); lat.append(dt); toks.append(tk)
+        sc = score(text)
+        raw.write(f"\n{'='*78}\n{m}  score={sc}\n{'-'*78}\n{text}\n")
+        agg.append(sc); lat.append(dt); toks.append(tk)
     if err:
         print(f"{m:<44}  {err[:34]}")
         continue
     tot = {k: sum(a[k] for a in agg) for k in agg[0]}
     p50 = statistics.median(lat)
+    price = PRICES.get(m, 0.0)
     print(f"{m:<44}{tot['parses']:>4}/{TRIALS}{tot['schema']:>5}/{TRIALS}"
           f"{tot['blocks']:>4}/{TRIALS}{tot['specific']:>4}/{TRIALS}{p50:>7.1f}"
-          f"{int(statistics.mean(toks)):>7}")
-    results.append((tot["specific"], tot["blocks"], tot["schema"], -p50, m))
+          f"{int(statistics.mean(toks)):>7}{price:>8.3f}")
+    # Behaviour first and non-negotiable. Among models that all behave, the
+    # cheapest wins - a 0.8s latency difference does not justify 3x the bill.
+    perfect = int(tot["specific"] == TRIALS and tot["blocks"] == TRIALS)
+    results.append((perfect, tot["specific"], -price, -p50, m))
 
 if results:
     results.sort(reverse=True)
-    print("\n" + "=" * 83)
-    print(f"WINNER on behaviour: {results[0][-1]}")
-    print("Set SLICE_MODEL to this in .env.example unless price moves you elsewhere.")
-    print("=" * 83)
+    print("\n" + "=" * 91)
+    ok = [r for r in results if r[0]]
+    if ok:
+        print(f"WINNER: {ok[0][-1]}   (perfect behaviour, cheapest of those that were perfect)")
+        if len(ok) > 1:
+            print(f"runner-up: {ok[1][-1]}  - use as SLICE_FALLBACK_MODEL if a different provider family")
+    else:
+        print("NOTHING scored perfectly. Read bakeoff_raw.txt before choosing.")
+    print(f"\nAny 0/{TRIALS} on parse: read {RAW} before condemning the model -")
+    print("it is often a preamble or a reasoning block, not an incapable model.")
+    print("=" * 91)
+raw.close()
