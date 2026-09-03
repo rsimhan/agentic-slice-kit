@@ -71,7 +71,9 @@ Value: An AI assistant that helps students be more productive."""
 
 
 def chat(model, timeout=90):
-    body = {"model": model, "max_tokens": 700, "temperature": 0,
+    # 700 was too low: a verbose model got cut off mid-JSON and looked
+    # "intermittently disobedient". Truncation is now measured, not guessed at.
+    body = {"model": model, "max_tokens": 1500, "temperature": 0,
             "messages": [{"role": "system", "content": SYSTEM},
                          {"role": "user", "content": WEAK}]}
     req = urllib.request.Request(
@@ -81,8 +83,11 @@ def chat(model, timeout=90):
     try:
         with urllib.request.urlopen(req, timeout=timeout) as r:
             d = json.load(r)
-        return (d["choices"][0]["message"]["content"], time.time() - t0,
-                (d.get("usage") or {}).get("total_tokens", 0), None)
+        ch = d["choices"][0]
+        cut = ch.get("finish_reason") == "length"
+        return (ch["message"]["content"], time.time() - t0,
+                (d.get("usage") or {}).get("total_tokens", 0),
+                "TRUNCATED at max_tokens - not a compliance failure" if cut else None)
     except urllib.error.HTTPError as e:
         return None, time.time() - t0, 0, f"HTTP {e.code} {(e.read() or b'')[:120].decode(errors='replace')}"
     except Exception as e:

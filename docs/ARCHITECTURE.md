@@ -46,10 +46,10 @@ fails loudly at the boundary where you can still see it.
 
 | | |
 |---|---|
-| `slice/llm.py:111` · `complete` | Takes a `schema=`; returns a parsed instance, never a string |
-| `slice/llm.py:212` · `_parse` | Validation |
-| `slice/llm.py:219` · `_repair` | One repair pass: shows the model its own output and the validation error |
-| `slice/llm.py:198` · `_strip_fence` | Forgives a markdown fence — a formatting habit, not a broken contract |
+| `slice/llm.py:122` · `complete` | Takes a `schema=`; returns a parsed instance, never a string |
+| `slice/llm.py:240` · `_parse` | Validation |
+| `slice/llm.py:247` · `_repair` | One repair pass: shows the model its own output and the validation error |
+| `slice/llm.py:226` · `_strip_fence` | Forgives a markdown fence — a formatting habit, not a broken contract |
 | `slice/records.py:45` · `Version` | The envelope every record travels in |
 
 **Why a repair pass and not a retry:** an identical second request usually fails
@@ -132,7 +132,7 @@ decisions, because every interesting failure is in the middle steps.
 
 | | |
 |---|---|
-| `slice/llm.py:79` · `_Span` | One span per call |
+| `slice/llm.py:90` · `_Span` | One span per call |
 | `slice/config.py:44` · `Settings.tracing_enabled` | Off unless configured |
 
 **Tracing no-ops when Langfuse is not set up**, and that is deliberate: no team
@@ -190,10 +190,10 @@ in front of judges.
 
 | | |
 |---|---|
-| `slice/llm.py:55` · `_classify_402` | The two 402s that look identical and mean opposite things |
+| `slice/llm.py:66` · `_classify_402` | The two 402s that look identical and mean opposite things |
 | `slice/llm.py:43` · `CapExhausted` | **Your team** is capped — routine, get a top-up |
 | `slice/llm.py:47` · `PoolExhausted` | **The shared account** is empty — every team is about to stop |
-| `slice/llm.py:111` · `complete` | Falls back to a different provider family on 429/5xx |
+| `slice/llm.py:122` · `complete` | Falls back to a different provider family on 429/5xx |
 | `slice/callback.py:56` · `sweep` | No expert → recorded unknown, run continues |
 | `slice/retrieve.py:118` · `search` | Empty corpus → say so, invent nothing |
 | `slice/runner.py:96` · `_fail` | Records **why** a run stopped, into the replayable history |

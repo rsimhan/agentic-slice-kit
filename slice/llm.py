@@ -52,6 +52,17 @@ class SchemaFailure(ModelError):
     """The model would not produce the agreed shape, even after a repair pass."""
 
 
+class Truncated(ModelError):
+    """The reply was cut off at max_tokens, mid-answer.
+
+    This is NOT the model failing to follow instructions, and telling the two
+    apart matters: a repair pass on a truncated reply hits the same ceiling and
+    fails identically. We found this the hard way - a model that looked
+    "intermittently disobedient" was simply verbose, and our max_tokens was too
+    low. Verbosity varies run to run, so the failure looked random.
+    """
+
+
 def _classify_402(body: dict) -> ModelError:
     """Read the error rather than guessing at it.
 
@@ -166,7 +177,21 @@ def complete(
             data = r.json()
             used = (data.get("usage") or {}).get("total_tokens", 0)
             budget.record_tokens(used)
-            last_text = data["choices"][0]["message"]["content"] or ""
+            choice = data["choices"][0]
+            last_text = choice["message"]["content"] or ""
+
+            # Cut off mid-answer? Retrying the same model changes nothing - it
+            # hits the same ceiling. Fall back instead: the fallback is a
+            # different model and may simply be terser.
+            if choice.get("finish_reason") == "length":
+                span.record(output={"model": mid, "truncated": True, "tokens": used})
+                if role == "primary" and len(attempts) > 1:
+                    continue
+                raise Truncated(
+                    f"{mid} was cut off at max_tokens ({settings.max_tokens}) "
+                    "before finishing. This is not a prompt problem.\n"
+                    "  -> Raise SLICE_MAX_TOKENS, or ask the agent for a shorter "
+                    "answer (fewer items, shorter fields).")
             span.record(output={"model": mid, "role": role, "tokens": used,
                                 "seconds": round(time.time() - t0, 2)})
 
