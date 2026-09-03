@@ -35,12 +35,31 @@ agentic slice demonstrates at least one of:
 - **multi-step reasoning or decomposition**
 - **human-in-the-loop callback mechanics**
 
-This kit demonstrates all four, and `docs/anatomy-of-an-agentic-slice.html`
+This kit demonstrates all four, and [`docs/anatomy-of-an-agentic-slice.html`](docs/anatomy-of-an-agentic-slice.html)
 explains how — nine principles, tiered by build order, with the line of code
 each one lives on.
 
 **Read that document before you write anything.** It will save you the rewrite
 that happens around hour thirty to teams who start with prompts.
+
+---
+
+## Who does what
+
+A team of four will not all do the same job, and the strongest teams split it
+like this. This is a strong recommendation, not a rule - organise differently if
+you have a better idea, but decide deliberately rather than by drift.
+
+| | owns | starts with |
+|---|---|---|
+| **The builder** | `slice/` - the spine, the plumbing, unblocking everyone else | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) |
+| **The domain lead** | `demo/` - prompts, schema, the rules in `flow.py` | [`docs/QUICKSTART.md`](docs/QUICKSTART.md) |
+| **The evidence lead** | user tests, the stress test, the design rationale | [`docs/EVIDENCE.md`](docs/EVIDENCE.md) |
+
+**If you write no code at all, take the third role.** It is not the consolation
+prize. Roughly 40% of what you are judged on is evidence that real people used
+your agent and that you changed it in response - and it is the part almost every
+team leaves until hour 40, by which point it is too late to do honestly.
 
 ---
 

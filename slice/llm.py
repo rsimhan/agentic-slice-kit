@@ -150,7 +150,10 @@ def complete(
                                headers={"Authorization": f"Bearer {settings.api_key}"})
             except httpx.RequestError as e:
                 if role == "fallback":
-                    raise ModelError(f"Both models unreachable: {e}") from e
+                    raise ModelError(
+                        f"Both models unreachable ({e}). Run "
+                        "`python scripts/doctor.py` - this is usually the network "
+                        "or a provider outage, not your code.") from e
                 continue                       # network hiccup: try the fallback
 
             if r.status_code == 402:
