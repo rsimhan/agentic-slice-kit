@@ -1,0 +1,361 @@
+<title>Anatomy of an Agentic Slice</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=JetBrains+Mono:wght@400;600&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap">
+<style>
+:root{
+  --paper:#FAF9F6;
+  --surface:#FFFFFF;
+  --surface-2:#F0EFEA;
+  --ink:#15191A;
+  --ink-2:#4C5455;
+  --ink-3:#7B8384;
+  --rule:#DEDCD4;
+  --rule-strong:#BFBDB3;
+  --t1:#0D5C5F;
+  --t2:#2A8388;
+  --t3:#5FA3A5;
+  --accent:#0D5C5F;
+  --accent-soft:#E2EDED;
+  --warn:#A8442A;
+  --warn-soft:#F6E7E1;
+  --tiernum-fg:#FFFFFF;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#101413;
+    --surface:#171C1C;
+    --surface-2:#1F2626;
+    --ink:#EAE8E2;
+    --ink-2:#A5ADAD;
+    --ink-3:#7C8585;
+    --rule:#272F2F;
+    --rule-strong:#3B4444;
+    --t1:#6FC5C4;
+    --t2:#57ABAC;
+    --t3:#3E8A8C;
+    --accent:#6FC5C4;
+    --accent-soft:#152827;
+    --warn:#E08A6E;
+    --warn-soft:#2A1A14;
+    --tiernum-fg:#101413;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#101413;
+  --surface:#171C1C;
+  --surface-2:#1F2626;
+  --ink:#EAE8E2;
+  --ink-2:#A5ADAD;
+  --ink-3:#7C8585;
+  --rule:#272F2F;
+  --rule-strong:#3B4444;
+  --t1:#6FC5C4;
+  --t2:#57ABAC;
+  --t3:#3E8A8C;
+  --accent:#6FC5C4;
+  --accent-soft:#152827;
+  --warn:#E08A6E;
+  --warn-soft:#2A1A14;
+  --tiernum-fg:#101413;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:Literata,Georgia,"Times New Roman",serif;
+  font-size:16.5px;line-height:1.68;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1000px;margin:0 auto;padding:0 26px 90px}
+.measure{max-width:66ch}
+h1,h2,h3,.disp{font-family:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;font-weight:700;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.3rem,5.2vw,3.5rem);line-height:1.02;letter-spacing:-.025em}
+h2{font-size:1.65rem;line-height:1.15;letter-spacing:-.018em}
+h3{font-size:1.02rem;line-height:1.3;letter-spacing:-.008em;font-weight:700}
+p{margin:0}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+code{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.84em;background:var(--surface-2);padding:1px 5px;border-radius:3px}
+.eyebrow{font-family:"JetBrains Mono",monospace;font-size:.7rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-3)}
+
+/* masthead */
+header.mast{padding:56px 0 30px;display:flex;flex-direction:column;gap:20px;border-bottom:3px solid var(--ink)}
+.thesis{
+  font-family:"Bricolage Grotesque",sans-serif;font-weight:500;
+  font-size:clamp(1.12rem,2.3vw,1.42rem);line-height:1.42;max-width:34ch;
+  color:var(--ink);
+}
+.thesis em{font-style:normal;color:var(--accent);font-weight:700}
+.sub{color:var(--ink-2);max-width:62ch;font-size:1rem}
+
+/* figure */
+figure{margin:38px 0 0;background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:26px 24px 18px}
+figure svg{width:100%;height:auto;display:block;color:var(--ink)}
+figcaption{margin-top:16px;font-size:.9rem;color:var(--ink-2);max-width:70ch;border-top:1px solid var(--rule);padding-top:12px}
+.dg-box{fill:var(--surface);stroke:currentColor;stroke-width:1.5}
+.dg-box-acc{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.dg-band{fill:var(--surface-2);stroke:var(--rule-strong);stroke-width:1.5}
+.dg-line{stroke:currentColor;fill:none;stroke-width:1.5}
+.dg-dash{stroke:var(--rule-strong);fill:none;stroke-width:1.4;stroke-dasharray:3 4}
+.dg-acc{stroke:var(--accent);fill:none;stroke-width:1.9}
+.dg-t{fill:currentColor;font-family:"JetBrains Mono",monospace;font-size:12px}
+.dg-lab{fill:var(--ink-3);font-family:"JetBrains Mono",monospace;font-size:10.5px}
+.dg-lab-acc{fill:var(--accent);font-family:"JetBrains Mono",monospace;font-size:10.5px;font-weight:600}
+.ah-ink path{fill:currentColor}
+.ah-acc path{fill:var(--accent)}
+.ah-mut path{fill:var(--rule-strong)}
+
+/* sections */
+section{padding-top:58px}
+.sechead{display:flex;flex-direction:column;gap:9px;margin-bottom:8px}
+.tierbar{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.tiernum{font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:600;letter-spacing:.14em;padding:4px 9px;border-radius:3px;color:var(--tiernum-fg)}
+.t1 .tiernum{background:var(--t1)} .t2 .tiernum{background:var(--t2)} .t3 .tiernum{background:var(--t3)}
+.tierline{height:3px;margin:14px 0 26px}
+.t1 .tierline{background:var(--t1)} .t2 .tierline{background:var(--t2)} .t3 .tierline{background:var(--t3)}
+.tiernote{color:var(--ink-2);max-width:60ch;font-size:.97rem}
+
+.prins{display:flex;flex-direction:column;gap:0}
+.prin{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.35fr);gap:26px;padding:22px 0;border-bottom:1px solid var(--rule)}
+.prin:first-child{border-top:1px solid var(--rule)}
+.prin .l h3{margin-bottom:6px}
+.prin .l p{font-size:.93rem;color:var(--ink-2)}
+.prin .r{border-left:2px solid var(--rule);padding-left:20px}
+.prin .r .eyebrow{display:block;margin-bottom:6px}
+.prin .r p{font-size:.93rem;color:var(--ink-2)}
+.prin .r p strong{color:var(--ink);font-weight:600}
+@media(max-width:700px){.prin{grid-template-columns:1fr;gap:14px}.prin .r{border-left:none;border-top:1px solid var(--rule);padding-left:0;padding-top:14px}}
+
+/* table */
+.tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:4px;background:var(--surface);margin-top:22px}
+table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:640px;font-family:"Bricolage Grotesque",sans-serif;font-weight:500}
+th,td{padding:11px 15px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:top}
+thead th{font-family:"JetBrains Mono",monospace;font-size:.66rem;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);background:var(--surface-2);white-space:nowrap}
+tbody tr:last-child td{border-bottom:none}
+td.k{font-weight:700;white-space:nowrap}
+td.ent{color:var(--ink-3)}
+td.loc{font-family:"JetBrains Mono",monospace;font-size:.78rem;text-align:right;white-space:nowrap;color:var(--ink-2)}
+th.loc{text-align:right}
+tr.sum td{background:var(--accent-soft);font-weight:700}
+
+/* anti-patterns */
+.antis{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:22px}
+.anti{background:var(--warn-soft);border:1px solid var(--warn);border-radius:4px;padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.anti h3{font-size:.96rem;color:var(--warn)}
+.anti p{font-size:.88rem;color:var(--ink-2)}
+
+/* build order */
+.order{display:flex;flex-direction:column;border-top:1px solid var(--rule);margin-top:20px}
+.orow{display:grid;grid-template-columns:64px 1fr 96px;gap:18px;padding:15px 0;border-bottom:1px solid var(--rule);align-items:baseline}
+.orow .h{font-family:"JetBrains Mono",monospace;font-size:.78rem;font-weight:600}
+.orow.o1 .h{color:var(--t1)} .orow.o2 .h{color:var(--t2)} .orow.o3 .h{color:var(--t3)}
+.orow .d{font-size:.94rem;color:var(--ink-2)}
+.orow .d strong{color:var(--ink);font-weight:600}
+.orow .g{font-family:"JetBrains Mono",monospace;font-size:.72rem;color:var(--ink-3);text-align:right}
+@media(max-width:640px){.orow{grid-template-columns:1fr;gap:4px}.orow .g{text-align:left}}
+
+.pull{border-left:3px solid var(--accent);background:var(--accent-soft);padding:18px 22px;border-radius:0 4px 4px 0;margin-top:30px}
+.pull p{font-size:1rem}
+footer{margin-top:66px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--ink-3)}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <span class="eyebrow">CEG Agent-a-thon · info session reference</span>
+  <h1>Anatomy of an<br>Agentic Slice</h1>
+  <p class="thesis">An agent is a control loop wrapped around a <em>non-deterministic function</em>. Every principle below is derived from that one fact — production architecture is not about making the model better, it is about making it safe to put in a loop.</p>
+  <p class="sub">Nine principles, in the order you should build them. Each is illustrated against the same reference system: a SPOT→PROBE venture-thesis agent with a faculty gate and a live human expert callback. Enterprise and student architectures do not differ in which principles apply — only in what each costs to implement.</p>
+</header>
+
+<figure>
+  <svg viewBox="0 0 880 400" role="img" aria-label="A run moves through four states — drafting, faculty gate, probing, brief — with a bounded revision loop back from the gate, a suspend-and-resume branch to an awaiting-expert state, and every transition writing a new version into a durable run record beneath.">
+    <defs>
+      <marker id="ah" class="ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker>
+      <marker id="aha" class="ah-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker>
+      <marker id="ahm" class="ah-mut" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker>
+    </defs>
+
+    <!-- suspended state -->
+    <rect class="dg-box-acc" x="470" y="26" width="150" height="50" rx="3"/>
+    <text class="dg-t" x="545" y="49" text-anchor="middle">AWAITING</text>
+    <text class="dg-t" x="545" y="65" text-anchor="middle">EXPERT</text>
+
+    <!-- suspend / resume -->
+    <line class="dg-acc" x1="505" y1="130" x2="505" y2="80" marker-end="url(#aha)"/>
+    <line class="dg-acc" x1="585" y1="76" x2="585" y2="126" marker-end="url(#aha)"/>
+    <text class="dg-lab-acc" x="497" y="107" text-anchor="end">suspends</text>
+    <text class="dg-lab-acc" x="593" y="107" text-anchor="start">resumes</text>
+
+    <!-- bounded revision loop -->
+    <path class="dg-acc" d="M325 130 C325 74, 105 74, 105 126" marker-end="url(#aha)"/>
+    <text class="dg-lab-acc" x="215" y="70" text-anchor="middle">blocks · revise · max 3</text>
+
+    <!-- main row -->
+    <rect class="dg-box" x="30" y="130" width="150" height="56" rx="3"/>
+    <text class="dg-t" x="105" y="155" text-anchor="middle">SPOT</text>
+    <text class="dg-lab" x="105" y="171" text-anchor="middle">drafts thesis</text>
+
+    <rect class="dg-box" x="250" y="130" width="150" height="56" rx="3"/>
+    <text class="dg-t" x="325" y="155" text-anchor="middle">FACULTY GATE</text>
+    <text class="dg-lab" x="325" y="171" text-anchor="middle">verdict, not chat</text>
+
+    <rect class="dg-box" x="470" y="130" width="150" height="56" rx="3"/>
+    <text class="dg-t" x="545" y="155" text-anchor="middle">PROBE</text>
+    <text class="dg-lab" x="545" y="171" text-anchor="middle">tests assumptions</text>
+
+    <rect class="dg-box" x="690" y="130" width="160" height="56" rx="3"/>
+    <text class="dg-t" x="770" y="155" text-anchor="middle">BRIEF</text>
+    <text class="dg-lab" x="770" y="171" text-anchor="middle">+ what is unknown</text>
+
+    <line class="dg-line" x1="180" y1="158" x2="243" y2="158" marker-end="url(#ah)"/>
+    <line class="dg-line" x1="400" y1="158" x2="463" y2="158" marker-end="url(#ah)"/>
+    <line class="dg-line" x1="620" y1="158" x2="683" y2="158" marker-end="url(#ah)"/>
+    <text class="dg-lab" x="211" y="150" text-anchor="middle">submit</text>
+    <text class="dg-lab" x="431" y="150" text-anchor="middle">pass</text>
+    <text class="dg-lab" x="651" y="150" text-anchor="middle">render</text>
+
+    <!-- writes down to record -->
+    <line class="dg-dash" x1="105" y1="186" x2="105" y2="292" marker-end="url(#ahm)"/>
+    <line class="dg-dash" x1="325" y1="186" x2="325" y2="292" marker-end="url(#ahm)"/>
+    <line class="dg-dash" x1="545" y1="186" x2="545" y2="292" marker-end="url(#ahm)"/>
+    <line class="dg-dash" x1="770" y1="186" x2="770" y2="292" marker-end="url(#ahm)"/>
+    <text class="dg-lab" x="113" y="240">thesis v1…v3</text>
+    <text class="dg-lab" x="333" y="240">verdict + objections</text>
+    <text class="dg-lab" x="553" y="240">evidence + source ids</text>
+    <text class="dg-lab" x="700" y="240" text-anchor="end">final</text>
+
+    <!-- record band -->
+    <rect class="dg-band" x="30" y="298" width="820" height="56" rx="3"/>
+    <text class="dg-t" x="50" y="322">RUN RECORD</text>
+    <text class="dg-lab" x="50" y="340">SQLite · one row per version · replayable · survives process exit</text>
+    <text class="dg-lab" x="830" y="331" text-anchor="end">the context window is a cache, not this</text>
+  </svg>
+  <figcaption>One picture, three principles. Every arrow between states writes a new version into the record below — which is what makes the gate's bounded revision loop auditable as a diff, and what allows the run to suspend into <span class="mono">AWAITING EXPERT</span>, exit the process entirely, and resume days later from a human's answer.</figcaption>
+</figure>
+
+<section class="t1">
+  <div class="sechead">
+    <div class="tierbar"><span class="tiernum">TIER 1</span><h2>The skeleton</h2></div>
+    <p class="tiernote">Below this line it is not agentic, it is a chatbot with extra steps. Roughly two hours of build, and every one of the six principles that follow depends on these three.</p>
+  </div>
+  <div class="tierline"></div>
+  <div class="prins">
+    <div class="prin">
+      <div class="l"><h3>Durable state outside the context window</h3><p>The context window is a cache. The system of record is external, versioned, and reconstructed into context each turn — never the other way round.</p></div>
+      <div class="r"><span class="eyebrow">In the reference</span><p><code>thesis_record</code> v1/v2/v3 as rows in SQLite. Every turn reads the record, calls the model, writes a new version. <strong>Nothing in Tier 2 or 3 is possible without this</strong> — you cannot suspend, resume, replay or audit a run whose only memory is a transcript.</p></div>
+    </div>
+    <div class="prin">
+      <div class="l"><h3>Typed contracts at every boundary</h3><p>Agents pass records, not prose. Prose compounds ambiguity silently; a schema fails loudly at the boundary where you can still see it.</p></div>
+      <div class="r"><span class="eyebrow">In the reference</span><p>SPOT emits a <code>ThesisRecord</code> with required fields. Faculty emits <code>Verdict{status, objections[]}</code> — never <strong>"I think this needs work."</strong> A Pydantic model and one retry buys the whole principle.</p></div>
+    </div>
+    <div class="prin">
+      <div class="l"><h3>Bounded loops</h3><p>The characteristic failure of an agent is not a crash — it is an expensive infinite loop. Every loop stops on something real: attempts, tokens, rupees, wall-clock.</p></div>
+      <div class="r"><span class="eyebrow">In the reference</span><p>The gate revises at most three times, then escalates. Note that the <strong>$12 cap on your API key is this same principle at the outermost scope</strong> — implement the identical fence twice more inside your own code.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="t2">
+  <div class="sechead">
+    <div class="tierbar"><span class="tiernum">TIER 2</span><h2>What makes it demonstrable</h2></div>
+    <p class="tiernote">Three more hours. This tier is what turns a working system into one a judge can believe in without reading your source.</p>
+  </div>
+  <div class="tierline"></div>
+  <div class="prins">
+    <div class="prin">
+      <div class="l"><h3>Tool use with provenance</h3><p>Not "the model said X" but "X — from chunk 47 of document 3, quoting this sentence." Provenance is how a reader distinguishes retrieval from invention.</p></div>
+      <div class="r"><span class="eyebrow">In the reference</span><p>PROBE writes <code>evidence{claim, stance, source_chunk_id, quote}</code> and the brief renders the quote inline. Fifteen lines of storage; the difference between a judge trusting the output and squinting at it.</p></div>
+    </div>
+    <div class="prin">
+      <div class="l"><h3>Human-in-the-loop as a state, not an exception</h3><p>An explicit state the run suspends into and resumes from — so the process can exit entirely and a later invocation picks up where it stopped.</p></div>
+      <div class="r"><span class="eyebrow">In the reference</span><p>An assumption marked <code>unresolvable_from_corpus</code> suspends the run to <code>awaiting_expert</code>, posts a question to a real alum, and resumes on their answer — with a timeout that degrades to <strong>unresolved_no_expert</strong> rather than hanging forever.</p></div>
+    </div>
+    <div class="prin">
+      <div class="l"><h3>Observability — the trace is half the demo</h3><p>You do not debug an agent by reading its output. You debug it by replaying its decisions, because every interesting failure is in the middle steps.</p></div>
+      <div class="r"><span class="eyebrow">In the reference</span><p>Every model call carries a span tagged with run id and record version, so the gate loop appears as <strong>three sibling spans with visible diffs</strong>. Show that on stage, not just the finished brief.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="t3">
+  <div class="sechead">
+    <div class="tierbar"><span class="tiernum">TIER 3</span><h2>What makes it handoff-ready</h2></div>
+    <p class="tiernote">The last three hours, and the tier that answers "could someone else pick this up and keep building?" — which is a question you will be asked.</p>
+  </div>
+  <div class="tierline"></div>
+  <div class="prins">
+    <div class="prin">
+      <div class="l"><h3>Orchestration in code, judgment in the model</h3><p>Use the model for judgment <em>inside</em> a step. Use deterministic code for sequencing <em>between</em> steps. An LLM choosing its own next action is unbounded in cost and unauditable after the fact.</p></div>
+      <div class="r"><span class="eyebrow">In the reference</span><p>Faculty returns a verdict; <strong>Python decides</strong> that a block means revise and that three blocks mean escalate. The model never gets to say "let me try that again."</p></div>
+    </div>
+    <div class="prin">
+      <div class="l"><h3>At least one assertion a human is not making by eye</h3><p>Without it, "we improved the prompt" is an unfalsifiable claim — a delicious irony in a system built to test falsifiable claims.</p></div>
+      <div class="r"><span class="eyebrow">In the reference</span><p>One golden case whose real-world outcome is known, plus five assertions: the gate blocks a thesis with no falsifiable claim; every evidence row carries a source id; no run exceeds its token ceiling.</p></div>
+    </div>
+    <div class="prin">
+      <div class="l"><h3>A defined failure behaviour per dependency</h3><p>Every external thing you depend on will fail during the 48 hours. Decide in advance what happens, or discover it live in front of judges.</p></div>
+      <div class="r"><span class="eyebrow">In the reference</span><p>Model API down → named fallback model. Corpus returns nothing → <strong>say so rather than invent</strong>. Expert does not answer → marked unknown and the run continues.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sechead">
+    <span class="eyebrow">The translation</span>
+    <h2>Same skeleton, thinner muscle</h2>
+  </div>
+  <p class="measure" style="color:var(--ink-2);margin-top:6px">This is the argument worth making out loud: nothing on this list is an enterprise luxury you are being asked to skip. Every principle survives the 48-hour cut at reduced fidelity, and the entire skeleton is about 250 lines of infrastructure code — less than most teams will spend on prompts.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Principle</th><th>Enterprise</th><th>48-hour version</th><th class="loc">Roughly</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Durable state</td><td class="ent">Event-sourced store, snapshots, replay tooling</td><td>One SQLite table, one row per version</td><td class="loc">40 lines</td></tr>
+        <tr><td class="k">Typed contracts</td><td class="ent">JSON Schema, validator, repair loop</td><td>A Pydantic model and one retry</td><td class="loc">20 lines</td></tr>
+        <tr><td class="k">Bounded loops</td><td class="ent">Per-tenant budgets, circuit breakers</td><td>Attempt counter + per-run token ceiling</td><td class="loc">15 lines</td></tr>
+        <tr><td class="k">Provenance</td><td class="ent">Citation verification against the source</td><td>Store the chunk id and quote, render inline</td><td class="loc">15 lines</td></tr>
+        <tr><td class="k">Human-in-the-loop</td><td class="ent">Durable task queue, SLAs, escalation policy</td><td>An <code>awaiting</code> state, a form, a timeout</td><td class="loc">60 lines</td></tr>
+        <tr><td class="k">Observability</td><td class="ent">Distributed tracing, sampling, alerting</td><td>One tracing decorator on every model call</td><td class="loc">10 lines</td></tr>
+        <tr><td class="k">Code orchestration</td><td class="ent">A workflow engine — Temporal and similar</td><td>A <code>match</code> statement over run states</td><td class="loc">30 lines</td></tr>
+        <tr><td class="k">Evaluation</td><td class="ent">Regression suite, judge scoring, CI gates</td><td>One golden case and five assertions</td><td class="loc">30 lines</td></tr>
+        <tr><td class="k">Degradation</td><td class="ent">Multi-provider failover, health checks</td><td>A fallback model id and explicit unknowns</td><td class="loc">15 lines</td></tr>
+        <tr class="sum"><td class="k">Whole skeleton</td><td class="ent">Teams and quarters</td><td>One long afternoon</td><td class="loc">~235 lines</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="sechead">
+    <span class="eyebrow">Reach for these and you will regret it</span>
+    <h2>Five anti-patterns</h2>
+  </div>
+  <div class="antis">
+    <div class="anti"><h3>The manager agent</h3><p>An LLM that decides which agent runs next. Feels sophisticated, is unbounded in cost, and cannot be debugged — because the control flow is different every run.</p></div>
+    <div class="anti"><h3>Conversation as state</h3><p>Keeping the run's memory in the message history. Works until the first restart, the first context overflow, or the first time someone asks what happened at step four.</p></div>
+    <div class="anti"><h3>Prose between agents</h3><p>Agent A writes a paragraph, agent B interprets it. Two lossy translations per hop, and no boundary at which a malformed handoff can be caught.</p></div>
+    <div class="anti"><h3>Persona count as a proxy</h3><p>Five characters in the cast is not five times as agentic. The measure is state transitions and tool calls, not how many system prompts wear a costume.</p></div>
+    <div class="anti"><h3>Framework before state model</h3><p>In 48 hours an orchestration framework costs more to learn than the hundred lines it replaces, and it hides the state model you most need to think about. Write the loop by hand; adopt a framework on day three of a project, not hour three.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="sechead">
+    <span class="eyebrow">Scoping</span>
+    <h2>Build in this order</h2>
+  </div>
+  <p class="measure" style="color:var(--ink-2);margin-top:6px">The order is not arbitrary — each tier is load-bearing for the next. A team that spends hour one on prompts and hour thirty on state will rewrite everything; a team that spends hour one on the record will not.</p>
+  <div class="order">
+    <div class="orow o1"><span class="h">H0–H2</span><span class="d"><strong>The spine.</strong> Record table, typed models, one hard-coded happy path end to end with a stub model. No prompts yet.</span><span class="g">Tier 1</span></div>
+    <div class="orow o1"><span class="h">H2–H4</span><span class="d"><strong>Real model calls.</strong> Swap the stub for the router. Add the attempt counter and the token ceiling before the first loop exists, not after it runs away.</span><span class="g">Tier 1</span></div>
+    <div class="orow o2"><span class="h">H4–H6</span><span class="d"><strong>Retrieval and provenance.</strong> Ingest the corpus, wire search, make every claim carry a source id from the first line you write.</span><span class="g">Tier 2</span></div>
+    <div class="orow o2"><span class="h">H6–H8</span><span class="d"><strong>The human callback and tracing.</strong> Suspend, resume, timeout. Then the trace decorator — which is also how you debug everything after this point.</span><span class="g">Tier 2</span></div>
+    <div class="orow o3"><span class="h">H8+</span><span class="d"><strong>Assertions, fallbacks, and the demo.</strong> The golden case, the five checks, the failure behaviours. Then real users — and remember you owe three walkthroughs, a recorded stress test, and a fix commit.</span><span class="g">Tier 3</span></div>
+  </div>
+  <div class="pull">
+    <p>The remaining time is not build time. It is the iteration you will be judged on — three fellow students through the flow, one classmate deliberately trying to break it, and a commit that fixes what they broke. Teams that treat hour 24 as a deadline for features rather than for feedback consistently ship the least convincing demos.</p>
+  </div>
+</section>
+
+<footer>
+  Reference material for the CEG Agent-a-thon info sessions. The system illustrated throughout — SPOT → faculty gate → PROBE, with a live alum callback — ships as the starter kit's worked example.
+</footer>
+
+</div>

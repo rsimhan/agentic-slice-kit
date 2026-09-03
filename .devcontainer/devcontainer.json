@@ -1,0 +1,35 @@
+{
+  "name": "Agentic Slice Kit",
+  "build": { "dockerfile": "Dockerfile", "context": ".." },
+
+  // 2 cores keeps a student inside the free 120 core-hour monthly quota for a
+  // full 48-hour event, with about 12 hours of headroom. Do not raise this
+  // without reading docs/QUOTA.md first.
+  "hostRequirements": { "cpus": 2 },
+
+  "forwardPorts": [8000],
+  "portsAttributes": {
+    "8000": { "label": "expert callback form", "onAutoForward": "notify" }
+  },
+
+  "containerEnv": { "FASTEMBED_CACHE_PATH": "/opt/fastembed" },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "GitHub.copilot",
+        "charliermarsh.ruff"
+      ],
+      "settings": {
+        "python.testing.pytestEnabled": true,
+        "python.testing.pytestArgs": ["tests"],
+        "editor.formatOnSave": true
+      }
+    }
+  },
+
+  "postCreateCommand": "cp -n .env.example .env || true",
+  "postAttachCommand": "python scripts/doctor.py || true"
+}

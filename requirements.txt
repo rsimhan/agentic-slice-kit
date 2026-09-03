@@ -1,0 +1,9 @@
+# The whole kit. Six direct dependencies.
+pydantic>=2.7          # typed contracts at every boundary
+httpx>=0.27            # model calls
+sqlite-vec>=0.1.9      # vector search inside the run database
+fastembed>=0.4         # local embeddings - no API key, no rate limit
+fastapi>=0.115         # the expert callback form
+uvicorn>=0.30          # serves it
+# dev
+pytest>=8.0
