@@ -17,14 +17,18 @@ Checks, in the order that things actually fail:
 import json, os, sqlite3, sys, urllib.error, urllib.request
 
 API = "https://openrouter.ai/api/v1"
-OK, BAD, WARN = "  ok  ", " FAIL ", " warn "
-fails = 0
+OK, BAD, WARN, SKIP = "  ok  ", " FAIL ", " warn ", " skip "
+fails = skips = 0
 
 
 def line(state, what, detail=""):
-    global fails
+    """Report and keep going. A diagnostic that stops at the first problem
+    hides the rest of them - which is the opposite of its job."""
+    global fails, skips
     if state is BAD:
         fails += 1
+    elif state is SKIP:
+        skips += 1
     print(f"[{state}] {what}" + (f"\n         {detail}" if detail else ""))
 
 
@@ -62,24 +66,26 @@ if not load_env():
     line(BAD, ".env not found", "Run:  cp .env.example .env   then paste your key.")
     sys.exit(1)
 key = os.environ.get("OPENROUTER_API_KEY", "").strip()
+line(OK, ".env loaded")
 if not key:
     line(BAD, "OPENROUTER_API_KEY is empty",
-         "Paste the key from the registration desk into .env")
-    sys.exit(1)
-line(OK, ".env loaded")
+         "Paste the key from the registration desk into .env, then rerun.")
 
 # 2 --------------------------------------------------------------------------
-st, me = get("/key", key)
-if st != 200:
-    line(BAD, f"key rejected (HTTP {st})", json.dumps(me)[:160])
+if not key:
+    line(SKIP, "credit check - needs a key")
 else:
+  st, me = get("/key", key)
+  if st != 200:
+    line(BAD, f"key rejected (HTTP {st})", json.dumps(me)[:160])
+  else:
     d = me.get("data", {})
     used, lim = d.get("usage"), d.get("limit")
     if lim:
         left = float(lim) - float(used or 0)
         pct = 100 * left / float(lim)
-        state = OK if pct > 25 else WARN
-        line(state, f"key works - ${left:.3f} of ${float(lim):.2f} left ({pct:.0f}%)",
+        line(OK if pct > 25 else WARN,
+             f"key works - ${left:.3f} of ${float(lim):.2f} left ({pct:.0f}%)",
              "" if pct > 25 else "Running low. Lower SLICE_MAX_TOKENS or see the desk.")
     else:
         line(OK, f"key works - ${float(used or 0):.3f} used, no cap set")
@@ -89,6 +95,8 @@ for var in ("SLICE_MODEL", "SLICE_FALLBACK_MODEL", "SLICE_ESCALATION_MODEL"):
     mid = os.environ.get(var, "").strip()
     if not mid:
         line(WARN, f"{var} not set"); continue
+    if not key:
+        line(SKIP, f"{var}={mid} - reachability needs a key"); continue
     if ":batch" in mid or mid.startswith("~"):
         line(BAD, f"{var}={mid}",
              "batch variants are not callable here, and ~latest aliases drift. Pin a version.")
@@ -116,6 +124,19 @@ except Exception as e:
     line(BAD, "sqlite-vec will not load", str(e)[:160])
 
 # 5 --------------------------------------------------------------------------
+try:
+    import shutil, subprocess
+    exe = shutil.which("cloudflared")
+    if not exe:
+        line(WARN, "cloudflared not installed",
+             "You will not be able to share a public demo URL from this codespace.")
+    else:
+        v = subprocess.run([exe, "--version"], capture_output=True, text=True, timeout=20)
+        line(OK, f"cloudflared present ({v.stdout.strip()[:48] or 'version unknown'})")
+except Exception as e:
+    line(WARN, "cloudflared check failed", str(e)[:120])
+
+# 6 --------------------------------------------------------------------------
 cache = os.environ.get("FASTEMBED_CACHE_PATH", "/opt/fastembed")
 if os.path.isdir(cache) and any(os.scandir(cache)):
     line(OK, f"embedding model present in the image ({cache})")
@@ -124,6 +145,12 @@ else:
          "First ingest will download ~80MB. Fine on good wifi, painful otherwise.")
 
 print("-" * 60)
-print(("all clear\n" if not fails else
-       f"{fails} problem(s) above - fix these BEFORE debugging your agent\n"))
+if fails:
+    print(f"{fails} problem(s) above" + (f", {skips} check(s) skipped" if skips else ""))
+    print("Fix these BEFORE you start debugging your agent - most of what looks")
+    print("like a broken agent at 3am is a broken environment.\n")
+elif skips:
+    print(f"no failures, {skips} check(s) skipped for want of a key\n")
+else:
+    print("all clear\n")
 sys.exit(1 if fails else 0)
