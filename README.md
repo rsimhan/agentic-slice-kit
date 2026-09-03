@@ -6,8 +6,7 @@ Not a framework. Not a library. About 400 lines you are expected to read,
 understand, and edit — because the architecture is the thing being taught, and
 you cannot learn an architecture you have imported.
 
-> **Status: under construction.** The spine's foundation is built and tested.
-> The demo, retrieval, model routing and expert callback are landing next.
+> **Status: spine complete, 23 tests passing. `demo/` is next.**
 
 ---
 
@@ -49,13 +48,14 @@ that happens around hour thirty to teams who start with prompts.
 
 ```
 slice/      THE SPINE — read this, edit it, do not treat it as a black box
-  records.py    what a run is made of                    stdlib
-  store.py      durable append-only state                stdlib
-  budget.py     the fences: attempts, tokens, wall-clock
-  llm.py        the ONE place a model is ever called
-  retrieve.py   chunk / embed / search
-  runner.py     the state machine
-  callback.py   suspend, resume, time out
+  records.py    what a run is made of                   stdlib   88
+  store.py      durable append-only state               stdlib  246
+  config.py     the one place .env is read              stdlib   64
+  budget.py     the fences: attempts and tokens         stdlib   94
+  llm.py        the ONE place a model is ever called            249
+  retrieve.py   chunk / embed / search, in the same db          138
+  callback.py   suspend on a human, resume, time out            101
+  runner.py     the state machine                                81
 
 demo/       THE DOMAIN — rewrite this for your own problem
 web/        the form a human expert answers on
