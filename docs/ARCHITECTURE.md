@@ -13,42 +13,25 @@ silently is the only kind worth trusting.
 
 ---
 
-## Start here — the reading path
+## How to use this page
 
-You own the machinery. That does not mean reading eleven hundred lines before
-you write anything, and a team that tries loses the first morning to it.
+**This is a reference, not a tutorial.** Reading it cover to cover on the first
+morning is not a good use of the morning. [`BUILDER.md`](BUILDER.md) is the
+document that gets you running and tells you which five functions to read.
 
-**1. Get it running.** Open the repo in Codespaces, put a key in `.env`, then
-`python -m scripts.doctor`. It checks five things in the order they actually
-break and tells you which one is wrong. Do this before anything else — what looks
-like a broken agent is usually a broken environment, and the difference is an
-hour.
+Come here for three reasons.
 
-**2. Read five functions, not the whole spine.** These are the ones you will
-touch. About forty lines between them, and after that the rest of `slice/` is
-predictable.
+**Something broke and you want to know where the property lives.** Each
+principle is anchored to the exact line of code that implements it, so this
+doubles as a map of the spine.
 
-| read | in | because |
-|---|---|---|
-| `Store.append` · `Store.latest` · `Store.history` | `slice/store.py` | how state is written and read back. Everything else is built on these three |
-| `runner.advance` | `slice/runner.py` | the loop. Your handlers get called from here, and it is thirty lines |
-| `llm.complete` | `slice/llm.py` | the only place a model is ever called. One choke point, on purpose |
-| `callback.ask` · `callback.answer` | `slice/callback.py` | how a run suspends on a person and picks up later |
-| `retrieve.search` | `slice/retrieve.py` | what comes back from the documents, and what a citation actually is |
+**A judge or a mentor asked why the system is shaped this way.** The reasoning is
+written down, and "because it survives a restart" is a better answer than
+"because the template did it that way".
 
-**3. Then write `demo/flow.py`.** Your handlers, your rules, your transitions.
-That is where a domain lives; the spine does not change. `demo/SPEC.md` is a
-worked example of what one looks like — including the parts that turned out to be
-wrong on review, which is the more useful half.
-
-**4. Come back to the principles below when something breaks.** Each one is
-anchored to the line of code it lives on, so this document doubles as a map when
-you are hunting.
-
-**A note on copying rather than installing.** You get the spine by copying it,
-which means when a fix lands upstream nobody gets it automatically. Check the
-repo on the morning of day two, and if you find a bug in `slice/` yourself, say
-so in the shared channel — twenty-five teams are running the same code.
+**You are directing an assistant and it is drifting.** Every principle below
+carries a **Tell your assistant** line — one sentence you can paste when the
+generated code starts wandering. You do not need to read the code to use those.
 
 ---
 
@@ -58,6 +41,8 @@ Below this line it is not agentic, it is a chatbot with extra steps. Everything
 in Tier 2 and Tier 3 depends on these three.
 
 ### 1. Durable state outside the context window
+
+> **Tell your assistant:** *state goes in the store as a new row, never into a variable that lives for the length of the run, and never by editing a row that already exists.*
 
 The context window is a cache. The system of record is external, versioned, and
 reconstructed into context each turn — never the other way round.
@@ -87,6 +72,8 @@ the newest row per key yourself. The name promises a guarantee the method does
 not make.
 
 ### 2. Typed contracts at every boundary
+
+> **Tell your assistant:** *every step returns a Pydantic model, never a string. If a step returns several of something, wrap them in a model — a bare `list[X]` is not a schema.*
 
 Agents pass records, not prose. Prose compounds ambiguity silently; a schema
 fails loudly at the boundary where you can still see it.
@@ -119,6 +106,8 @@ conversion you can point at — model output, corpus input, human input alike. A
 boundary with no conversion is not a contract, it is a hope.
 
 ### 3. Bounded loops
+
+> **Tell your assistant:** *the count limit goes in the schema, not the prompt. And keep my domain limits separate from the spend fence — count revisions from the record history, not from `budget.attempt`.*
 
 The characteristic failure of an agent is not a crash — it is an expensive
 infinite loop. Every loop stops on something real.
@@ -171,6 +160,8 @@ source.
 
 ### 4. Tool use with provenance
 
+> **Tell your assistant:** *after the model answers, check in plain code that the source it cited was returned by that search and the quote appears verbatim in it. If either fails, demote the row to unresolved with a note — never drop it, and never trust the model's own citation.*
+
 Not "the model said X" but "X — from `notes.md#3`, quoting this passage."
 
 | | |
@@ -212,6 +203,8 @@ mislead the model. It cannot get past a check that never asks the model
 anything.
 
 ### 5. Human-in-the-loop as a state, not an exception
+
+> **Tell your assistant:** *asking a person is a state the run suspends into, not a call that blocks. And the answer has to become a typed record that the decision reads, or the person was consulted and ignored.*
 
 The naive version blocks: call a human, wait, hope the process survives. It
 never does.
@@ -257,6 +250,8 @@ was.
 
 ### 6. Observability
 
+> **Tell your assistant:** *every model call gets a step name, so I can tell later which one cost the money and which one produced the wrong answer.*
+
 You do not debug an agent by reading its output. You debug it by replaying its
 decisions, because every interesting failure is in the middle steps.
 
@@ -284,6 +279,8 @@ which you will be asked.
 
 ### 7. Orchestration in code, judgement in the model
 
+> **Tell your assistant:** *the model returns a judgement; my code decides what that judgement means. Do not let it choose the next step.*
+
 Use the model for judgement *inside* a step. Use deterministic code for
 sequencing *between* steps.
 
@@ -308,6 +305,8 @@ suspended run is just a run in a state whose handler is "wait", so calling
 `advance` again is all resuming is.
 
 ### 8. At least one assertion a human is not making by eye
+
+> **Tell your assistant:** *never `assert` on anything a model produced — record it as a finding or raise a named error my flow catches. And write me a test that feeds in a fabricated citation and proves the run rejects it.*
 
 Without it, "we improved the prompt" is an unfalsifiable claim — a delicious
 irony in a system built to test falsifiable claims.
@@ -345,6 +344,8 @@ model that complied only **2 times in 5**, at temperature zero. One clean run is
 an anecdote. See `confident-and-wrong.html`.
 
 ### 9. A defined failure behaviour per dependency
+
+> **Tell your assistant:** *do not catch an exception and carry on. Every abnormal stop writes a failure record saying which dependency failed and why.*
 
 Everything external will fail over two days. Decide in advance, or discover it
 in front of judges.

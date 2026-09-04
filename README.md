@@ -56,28 +56,27 @@ that hits teams on the second morning who start with prompts.
 ## Who does what
 
 A team of four will not all do the same job, and the strongest teams split it
-like this. This is a strong recommendation, not a rule - organise differently if
+three ways. This is a strong recommendation, not a rule - organise differently if
 you have a better idea, but decide deliberately rather than by drift.
 
-| | owns | starts with |
+| | owns | reads |
 |---|---|---|
-| **The builder** | `slice/` - the spine, the plumbing, unblocking everyone else | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) |
-| **The domain lead** | `demo/` - prompts, schema, the rules in `flow.py` | [`docs/QUICKSTART.md`](docs/QUICKSTART.md) |
-| **The evidence lead** | user tests, the stress test, the design rationale | [`docs/EVIDENCE.md`](docs/EVIDENCE.md) |
+| **Designer** | the problem and the spec - what it does, what makes an answer wrong, what it refuses | [`docs/DESIGNER.md`](docs/DESIGNER.md) |
+| **Builder** | the machinery - environment, the spine, `demo/flow.py`, unblocking everyone else | [`docs/BUILDER.md`](docs/BUILDER.md) |
+| **Verifier** | real people using it, the stress test, the design rationale | [`docs/VERIFIER.md`](docs/VERIFIER.md) |
 
-**Before the event:** [`docs/DESIGN-YOUR-AGENT.md`](docs/DESIGN-YOUR-AGENT.md)
-is a guided design session &mdash; about three hours, any frontier chat, and
-everyone on the team can do it, together or apart &mdash;
-no keys, no installation. It produces a rough spec for your own agent — which
-is, near enough, what a strong preliminary submission has to say. Optional, and
-the best three hours available to you in the fortnight before the event.
+**Everyone starts in the same place.** Part one of
+[`docs/DESIGNER.md`](docs/DESIGNER.md) is a guided design session &mdash; about
+three hours, any frontier chat, no keys, nothing installed &mdash; and the whole
+team should be in it. It produces a spec for your own agent, which is near
+enough what a strong preliminary submission has to say. The roles start
+mattering on the first morning, not during the fortnight.
 
-Two of these three roles need **no programming at all**, and both have real
-preparation worth doing before the event - each guide opens with what to do in
-the fortnight beforehand.
+The ideas the three guides assume are in
+[`docs/PRINCIPLES-BRIEF.md`](docs/PRINCIPLES-BRIEF.md) &mdash; short, and worth
+reading before any of them.
 
-**If you write no code at all, take the third role.** It is not the consolation
-prize. Roughly a third of what you are judged on is evidence that real people used
+**The Verifier role is not the consolation prize.** Roughly a third of what you are judged on is evidence that real people used
 your agent and that you changed it in response - and it is the part almost every
 team leaves until the last afternoon, by which point it is too late to do honestly.
 

@@ -1,6 +1,9 @@
-# Evidence
+# Verifier
 
-**For the person on the team who is not writing code.**
+**You establish that this actually works for real people.** Not that it runs —
+that someone who has never seen it can use it, that you watched what happened,
+and that the team changed something because of what you saw. Then you write down
+why the agent is shaped the way it is and where its limits are.
 
 Read this first: you have the highest-leverage job on the team, and almost
 nobody does it well.
@@ -68,7 +71,7 @@ the evidence.
 
 ### Know your team's spec well enough to keep quiet about it
 
-Your team's spec comes out of [`DESIGN-YOUR-AGENT.md`](DESIGN-YOUR-AGENT.md), and
+Your team's spec comes out of [`DESIGNER.md`](DESIGNER.md), and
 you should be in those sessions — the person who will watch strangers use this
 has the sharpest instinct for where it will confuse them.
 

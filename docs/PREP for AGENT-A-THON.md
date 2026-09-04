@@ -39,19 +39,17 @@ Deep familiarity with a real situation is the scarcer ingredient, by a distance.
 
 ## **The three jobs in a team**
 
-Teams of four tend to split like this. It's an observation, not a rule — but it's worth deciding deliberately rather than by drift, because the third one gets forgotten and it's the one that decides a lot of the outcome.
+Teams of four tend to split three ways. It's an observation, not a rule — but it's worth deciding deliberately rather than by drift, because the third one gets forgotten and it's the one that decides a lot of the outcome.
 
-**The builder.** Gets the machinery running and keeps everyone else unblocked. Sets up the environment, wires the pieces together, and becomes the person who reads the error message when something breaks at four o'clock. Front-loaded work — heaviest on the first morning, lighter after that.
+**Designer.** Owns the problem and the spec. Decides what the agent should do, what a good answer looks like, what should make it refuse, and which rules it enforces. Writes the instructions the agent works from and judges whether its output is any good. Design work rather than coding, and the part no assistant can do for you — it depends on knowing what actually happens in the situation you're fixing.
 
-**The domain lead.** Owns the problem itself. Decides what the agent should do, what a good answer looks like, what should make it refuse, and which rules it enforces. Writes the instructions the agent works from and judges whether its output is any good. This is design work rather than coding, and it's the part no AI assistant can do for you — it depends on knowing what actually happens in the situation you're fixing.
+**Builder.** Gets the machinery running and keeps everyone else unblocked. Sets up the environment, wires the pieces together, and becomes the person who reads the error message when something breaks at four o'clock. Front-loaded — heaviest on the first morning, lighter after that.
 
-**The evidence lead.** Puts the agent in front of real people and watches what they do with it. Runs the walkthroughs, recruits someone to try to break it, captures what went wrong, and makes sure the team changes something in response. Also writes up why the agent is shaped the way it is and where its limits are.
+**Verifier.** Establishes that it works for real people, not just that it runs. Puts it in front of someone who has never seen it, watches without helping, recruits someone to try to break it, and makes sure the team changes something in response. Also writes up why the agent is shaped the way it is and where its limits are.
 
-Roughly a third of what we're judging is evidence that real people used your agent and that you changed it after watching them — and it's the part most teams leave until the last few hours, by which point it can't be done honestly. **Nobody needs to write a line of code to own that job well.**
+Roughly a third of what we're judging is that third job — evidence that real people used your agent and that you changed it after watching them. It's the part most teams leave until the last few hours, by which point it can't be done honestly.
 
-Two of the three roles involve no programming, and both have real preparation worth doing beforehand.
-
----
+Pick by what you want to own, not by what you already know how to do. All three jobs involve directing an assistant, and none of them is only for people who already write code.
 
 ## **Ways to spend the fortnight**
 
@@ -108,9 +106,11 @@ Open it in the browser and it runs; nothing installs on your laptop.
 ### Everyone starts in the same place
 
 Whatever seat you end up in, the fortnight has one job: **decide what your agent
-is, and write it down.** That is [`docs/DESIGN-YOUR-AGENT.md`](https://github.com/rsimhan/agentic-slice-kit/blob/main/docs/DESIGN-YOUR-AGENT.md) — five short
-sessions you run with any frontier chat, no keys and nothing installed. Do it as
-a team over a coffee, or alone and argue about it afterwards.
+is, and write it down.** That is part one of [`docs/DESIGNER.md`](https://github.com/rsimhan/agentic-slice-kit/blob/main/docs/DESIGNER.md) — five short
+sessions you run with any frontier chat, no keys and nothing installed. **The
+whole team should be in it**, whatever seat they end up taking: the builder
+argues about what is feasible, and the person who will watch strangers use it has
+the sharpest instinct for where it will confuse them.
 
 What comes out is a filled-in spec: a specific moment worth fixing, a state
 machine with a back-edge, three things your agent refuses to do, and an honest
@@ -126,11 +126,13 @@ is actually useful.
 The three guides below are for the days themselves. Open one the night before if
 you want a head start, but nothing here needs a fortnight.
 
-| if you are the one who… | read | what it gives you |
+| seat | read | what it gives you |
 |---|---|---|
-| decides what the agent should do, and what makes an answer wrong | `docs/QUICKSTART.md` | how the system works without the syntax, and a running agent in about twenty minutes |
-| puts it in front of real people and captures what happened | `docs/EVIDENCE.md` | how to run a walkthrough, what to write down, and why roughly a third of the marks live here |
-| gets the machinery running and reads the error at four o'clock | `docs/ARCHITECTURE.md` | a reading path into the spine, then nine principles and the line of code each one lives on |
+| Designer | `docs/DESIGNER.md` part two | the corpus, the prompts, and how to judge whether an answer is any good |
+| Builder | `docs/BUILDER.md` | a running system in about twenty minutes, then the five functions worth reading |
+| Verifier | `docs/VERIFIER.md` | how to run a walkthrough, what to write down, and why roughly a third of the marks live here |
+
+The ideas all three assume are in `docs/PRINCIPLES-BRIEF.md` — short, and worth reading before any of them. `docs/ARCHITECTURE.md` is the reference to consult when something breaks, not a document to read cover to cover.
 
 **One thing that cannot wait.** Whoever takes the evidence seat should line up
 their testers this week — three people for twenty minutes each during the event,

@@ -1,40 +1,27 @@
-# Quickstart — the domain lead
+# Builder
 
-**You do not have to be a programmer to own this role.** Plenty of people build
-substantial systems without reading the code their assistant writes — what they
-bring is judgement about *what should happen*, and that turns out to be the
-scarcer skill.
+**You get the machinery running and keep everyone else unblocked.** On the first
+morning that means an environment that works, the spine understood well enough
+to wire your own domain into it, and the state machine actually turning. After
+that you are the person who reads the error message when something breaks at
+four o'clock.
 
-So this guide explains the **system**, not the syntax. Where something technical
-happens, you get told what it is for and what it means when it breaks. If you
-find yourself reading Python here, that is a failure of this document, not of
-you.
-
-**Your actual job:** decide what the agent should do, what counts as a good
-answer, and when it should refuse. Those are product decisions. The code is
-downstream of them.
+You will not be writing most of the code by hand — an assistant will. What you
+bring is knowing what to ask it for, and noticing when what came back is subtly
+wrong. That is a different skill from typing Python, and it is the scarcer one.
 
 ---
 
 ## Before you open this
 
-The design work happens somewhere else, and everyone on the team does it:
-[`DESIGN-YOUR-AGENT.md`](DESIGN-YOUR-AGENT.md) is five short sessions with any
-frontier chat that produce a spec — the problem, the states, the rules, the
-refusals. That is the fortnight's job, and it needs no keys and nothing
-installed.
+Your team's spec comes from [`DESIGNER.md`](DESIGNER.md) — the problem, the
+states, the records, the rules. Read it before you build anything; you are
+implementing that, and an hour spent arguing with it now is worth a day of
+rework. If your team has not written one, that is the first job, and everyone
+does it together.
 
-This document is the other thing: getting a system running and understanding
-what it does. It takes about twenty minutes and works equally well the night
-before or on the first morning. Come back here when you have a browser and a
-spec you believe in.
-
-One thing worth starting early, because it cannot be done on the day: **collect
-the documents your agent will read.** Ten to twenty of them — syllabus pages,
-lab manuals, past papers, forum threads, notes from talking to three people
-about the problem. Plain text or markdown. Notes from real conversations are
-worth more than anything official, because they contain the specifics that make
-an answer useful.
+Then this document, in order. It takes about twenty minutes to get running and
+another hour to understand what you are running.
 
 ---
 
@@ -113,100 +100,37 @@ the environment is wrong and it is not something you did.
 
 ---
 
-## Give your agent something to read — and why
-
-Right now your agent knows whatever the language model picked up from the
-internet. It knows **nothing about your problem** — not your syllabus, not your
-lab manuals, not the notes you took talking to three students last Tuesday.
-
-Ingesting fixes that. Drop your documents into `corpus/` as `.md` or `.txt`,
-then:
-
-```bash
-python -c "
-from slice.store import Store
-from slice import retrieve
-s = Store('run.db')
-print(retrieve.ingest(s, 'corpus'))
-for c in retrieve.search(s, 'your question here', k=3):
-    print(f'{c.cite():<16} {c.text[:70]}...')
-"
-```
-
-**Three things just happened.** Your documents were chopped into passages of a
-few hundred words. Each passage was converted into a list of numbers that
-captures its *meaning*. Those were stored in a file next to your code.
-
-Later, when your agent has a question, the question gets converted the same way
-and the closest passages come back — **closest in meaning, not in wording**.
-Asking "how fast is AI improving" will surface a passage about "model capability
-growth" that shares no words with the question at all. That is the whole trick,
-and it is why this is better than searching for keywords.
-
-**This is a design decision, not a technical step.** What you put in `corpus/`
-determines what your agent can know — and, more importantly, what it can be held
-to. That choice is yours and it matters more than any prompt you will write. An
-agent with ten pages of real interview notes will say more useful things than one
-with a hundred pages of official documentation.
-
 ---
 
-## Why the citation matters
+## Read five functions, not eleven hundred lines
 
-Every result comes back tagged like `notes.md#2` — document name, passage
-number. **Keep that all the way through to your output.**
+`slice/` is about 1,100 lines and the instruction "read it" is not useful on a
+morning when four people are waiting for you. These five are the ones you will
+actually touch. Forty-odd lines between them, and after that the rest of the
+spine is predictable.
 
-Here is what it buys you. Language models produce fluent, confident, specific
-prose whether or not it is true. Faced with an output that says *"students
-consistently struggle with free-body diagrams"*, nobody — not you, not a judge —
-can tell whether your agent **found that in your documents** or **made it up**.
-Both look identical on the page. This is the single most common way agentic
-demos quietly mislead the people watching them.
+| read | in | because |
+|---|---|---|
+| `Store.append` · `Store.latest` · `Store.history` | `slice/store.py` | how state is written and read back. Everything else is built on these three |
+| `advance` | `slice/runner.py` | the loop. Your handlers get called from here, and it is about thirty lines |
+| `complete` | `slice/llm.py` | the only place a model is ever called, on purpose. One choke point to reason about |
+| `ask` · `answer` | `slice/callback.py` | how a run suspends on a person and gets picked up later |
+| `search` | `slice/retrieve.py` | what comes back from the documents, and what a citation actually is |
 
-The citation is what removes the ambiguity — but only once something checks
-it. An output that says:
+**Then write `demo/flow.py`.** Your handlers, your transitions, your rules. That
+is where a domain lives and the spine does not change. `demo/SPEC.md` is a worked
+example of one — including the parts that turned out to be wrong when three
+reviewers went at it, which is the more useful half.
 
-> Students consistently struggle with free-body diagrams
-> — `interviews.md#4`: *"three of the five students I spoke to redrew the
-> diagram before they could start the problem"*
+[`ARCHITECTURE.md`](ARCHITECTURE.md) is the reference for everything else. It is
+not a tutorial and you should not read it cover to cover — go there when
+something breaks, or when a judge asks why the system is shaped this way.
 
-is **checkable**. Which is not the same as checked, and the gap between those
-two words is where teams lose the argument.
-
-**Here is the part that catches almost everyone.** The model writes the
-citation. Search hands it some passages, the model then types out a source name
-and a quote, and nothing so far has compared the one to the other. A model can
-put `interviews.md#4` under a sentence that appears nowhere in `interviews.md#4`
-— fluent, plausible, formatted exactly like the real thing. Keeping the tag
-attached to the passage is necessary, and on its own it proves nothing. If the
-model is the only thing vouching for the model, you are back where you started.
-
-What actually establishes provenance is a short piece of ordinary code that runs
-after the model has answered and asks the model nothing:
-
-> Is the source it cited one of the passages this search actually returned?
-> And does the quote appear word for word inside that passage, ignoring
-> spacing?
-
-Both true, and the claim is supported — you can say so and mean it. Either one
-false, and the row is **demoted**: kept, relabelled *could not establish*, with
-a note saying which of the two checks failed.
-
-**Demoted, not deleted.** A citation that failed the check is a fact about your
-run, and quietly dropping it is how a team ends up with an artefact that looks
-better than the evidence under it. A judge who sees three supported rows and one
-honest "could not establish" trusts the three. Four immaculate rows give them no
-reason to trust any. And an agent that can say *I could not find support for
-this* is more impressive than confident invention, because it means the system
-knows the difference between what it found and what it assumed.
-
-This is one of the few places where you get certainty rather than judgement, and
-you get it precisely because no model is consulted. It is a small function; ask
-your assistant for it, or a mentor. Do it before the prompts get good, not
-after — a demo that claims provenance and a demo that has it look identical
-right up to the moment someone checks.
-
----
+**One thing about copying rather than installing.** You got the spine by copying
+it, so if a fix lands upstream nobody gets it automatically. Check the repo on
+the morning of day two. And if you find a bug in `slice/` yourself, say so in
+the shared channel — every team is running the same code, and you will have
+saved several of them an afternoon.
 
 ## What you actually change
 
@@ -217,6 +141,19 @@ Three files. Everything else is machinery you can leave alone.
 | `demo/schema.py` | The shape of the records your agents pass each other | *What are we building up, and what fields must it have?* |
 | `demo/prompts/*.md` | What each agent is told | *What is each one for?* |
 | `demo/flow.py` | The transitions and the rules | *What happens next, and who decides?* |
+
+**The check you owe the team.** [`DESIGNER.md`](DESIGNER.md) explains why a
+citation the model wrote is not evidence. The code is yours, it is short, and it
+runs after the model has answered and asks the model nothing:
+
+> Is the source it cited one of the passages this search actually returned?
+> And does the quote appear word for word inside that passage, ignoring spacing?
+
+Both true and the row stands. Either false and the row is **demoted** — kept,
+relabelled *could not establish*, with a note saying which check failed. Never
+deleted. Write this before the prompts get good, not after; a system that claims
+provenance and one that has it look identical right up to the moment someone
+checks.
 
 **`flow.py` is the one that matters**, and it is where your five rules from the
 prep work land. It holds decisions like "three failed reviews means escalate"
@@ -305,7 +242,7 @@ sub-problem — not out of frustration when something will not work.
 **You keep everything in the conversation.** It works until the first restart.
 Write it down; that is what the store is for.
 
-**You leave the users until the end.** See [`EVIDENCE.md`](EVIDENCE.md). It is
+**You leave the users until the end.** See [`VERIFIER.md`](VERIFIER.md). It is
 worth more marks than your last feature and cannot be faked on the second afternoon.
 
 ---

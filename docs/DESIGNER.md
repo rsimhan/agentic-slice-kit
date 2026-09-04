@@ -1,4 +1,18 @@
-# Design your agent, before the event
+# Designer
+
+**You own the problem and the spec.** What the agent should do, what a good
+answer looks like, what should make it refuse, and which rules it enforces. It
+is design work rather than coding, and it is the part no assistant can do for
+you — it depends on knowing what actually happens in the situation you are
+fixing.
+
+The job has two halves. **Before the event** you decide what you are building
+and write it down. **On the day** you turn that into the corpus, the prompts and
+the judgement calls about whether an answer is any good.
+
+---
+
+# Part one — before the event
 
 **This is a starter kit, not homework.** Nobody is marking this file, and
 nothing in it is a deliverable in itself.
@@ -9,10 +23,11 @@ submission and shortlists before the event, and what comes out of these sessions
 honest list of what you are unsure about — is the substance that submission
 needs.
 
-You have a fortnight, and this is the best three hours you could spend in it.
-Teams that arrive with a design start building at hour one instead of hour six —
-and the thinking it asks for is the part a language model genuinely cannot do
-for you.
+**Everyone on the team should be in these sessions.** The person who will build
+it argues about what is feasible; the person who will watch strangers use it has
+the sharpest instinct for where it will confuse them. Do it together over a
+coffee, or apart and argue afterwards. What you must not do is have one person
+write it alone and hand it over.
 
 You need a frontier chat — Claude, ChatGPT, Gemini, whichever you prefer. No
 keys, no installation, free tiers are fine.
@@ -260,7 +275,9 @@ tell it directly: **stop agreeing with me.**
 
 ---
 
-## When you are done
+---
+
+## When part one is done
 
 You have a few pages. It is wrong in places, and the last two sections say
 where. That is exactly right.
@@ -285,3 +302,171 @@ spec working, not failing.
 models, libraries and limits — check those in the first hour of day one. Some of
 them will be wrong. Finding out at ten on the first morning costs ten minutes.
 Finding out at four on the second afternoon costs you the build.
+
+---
+
+# Part two — on the day
+
+Your spec is a hypothesis. Day one is where it meets a running system, and three
+things belong to you.
+
+## Choosing what your agent reads
+
+Right now your agent knows whatever the language model picked up from the
+internet. It knows **nothing about your problem** — not your syllabus, not your
+lab manuals, not the notes you took talking to three students last Tuesday.
+
+Ingesting fixes that. Drop your documents into `corpus/` as `.md` or `.txt`,
+then:
+
+```bash
+python -c "
+from slice.store import Store
+from slice import retrieve
+s = Store('run.db')
+print(retrieve.ingest(s, 'corpus'))
+for c in retrieve.search(s, 'your question here', k=3):
+    print(f'{c.cite():<16} {c.text[:70]}...')
+"
+```
+
+**Three things just happened.** Your documents were chopped into passages of a
+few hundred words. Each passage was converted into a list of numbers that
+captures its *meaning*. Those were stored in a file next to your code.
+
+Later, when your agent has a question, the question gets converted the same way
+and the closest passages come back — **closest in meaning, not in wording**.
+Asking "how fast is AI improving" will surface a passage about "model capability
+growth" that shares no words with the question at all. That is the whole trick,
+and it is why this is better than searching for keywords.
+
+**This is a design decision, not a technical step.** What you put in `corpus/`
+determines what your agent can know — and, more importantly, what it can be held
+to. That choice is yours and it matters more than any prompt you will write. An
+agent with ten pages of real interview notes will say more useful things than one
+with a hundred pages of official documentation.
+
+---
+
+## Why a citation is not evidence until something checks it
+
+Every result comes back tagged like `notes.md#2` — document name, passage
+number. **Keep that all the way through to your output.**
+
+Here is what it buys you. Language models produce fluent, confident, specific
+prose whether or not it is true. Faced with an output that says *"students
+consistently struggle with free-body diagrams"*, nobody — not you, not a judge —
+can tell whether your agent **found that in your documents** or **made it up**.
+Both look identical on the page. This is the single most common way agentic
+demos quietly mislead the people watching them.
+
+The citation is what removes the ambiguity — but only once something checks
+it. An output that says:
+
+> Students consistently struggle with free-body diagrams
+> — `interviews.md#4`: *"three of the five students I spoke to redrew the
+> diagram before they could start the problem"*
+
+is **checkable**. Which is not the same as checked, and the gap between those
+two words is where teams lose the argument.
+
+**Here is the part that catches almost everyone.** The model writes the
+citation. Search hands it some passages, the model then types out a source name
+and a quote, and nothing so far has compared the one to the other. A model can
+put `interviews.md#4` under a sentence that appears nowhere in `interviews.md#4`
+— fluent, plausible, formatted exactly like the real thing. Keeping the tag
+attached to the passage is necessary, and on its own it proves nothing. If the
+model is the only thing vouching for the model, you are back where you started.
+
+What actually establishes provenance is a short piece of ordinary code that runs
+after the model has answered and asks the model nothing:
+
+> Is the source it cited one of the passages this search actually returned?
+> And does the quote appear word for word inside that passage, ignoring
+> spacing?
+
+Both true, and the claim is supported — you can say so and mean it. Either one
+false, and the row is **demoted**: kept, relabelled *could not establish*, with
+a note saying which of the two checks failed.
+
+**Demoted, not deleted.** A citation that failed the check is a fact about your
+run, and quietly dropping it is how a team ends up with an artefact that looks
+better than the evidence under it. A judge who sees three supported rows and one
+honest "could not establish" trusts the three. Four immaculate rows give them no
+reason to trust any. And an agent that can say *I could not find support for
+this* is more impressive than confident invention, because it means the system
+knows the difference between what it found and what it assumed.
+
+This is one of the few places where you get certainty rather than judgement, and
+you get it precisely because no model is consulted. It is a small function; ask
+your assistant for it, or a mentor. Do it before the prompts get good, not
+after — a demo that claims provenance and a demo that has it look identical
+right up to the moment someone checks.
+
+---
+
+---
+
+## Writing the prompts
+
+Prompts are the last thing you build, not the first — the boring path should
+already run end to end on hard-coded fake answers before a real one is written.
+That instruction is in [`BUILDER.md`](BUILDER.md) and it is worth holding your
+team to it.
+
+When you do get there, three things separate a prompt that works from one that
+nearly works.
+
+**Say what the step is for, not how to sound.** A prompt is a job description.
+"Judge whether this thesis names a specific person rather than a category" is a
+job. "Be a helpful and rigorous analyst" is a mood.
+
+**Put the rules where they are enforced.** A limit stated in a prompt is a
+suggestion the model may ignore; the same limit in the schema is checked. If you
+want between three and five of something, that belongs in the record shape, and
+your builder can do it in a line. Prompts are for judgement, schemas are for
+bounds.
+
+**Give it the shape of a good answer and a bad one.** One example of each is
+worth a paragraph of instruction, and the bad example is the one that does the
+work — it is how you say *this specific failure, not in general*.
+
+---
+
+## Judging the output — the part that is actually your job
+
+This is where the day goes, and it is the thing an assistant cannot do for you.
+
+The question is never "is this good writing". It is **would I act on this?** Read
+an output and ask three things:
+
+**Is it specific to this input, or would it have been true of any input?** The
+commonest failure is fluent generality — an answer that would fit any thesis in
+the room. If you could paste someone else's input and get substantially the same
+output, the step is not doing anything.
+
+**Does every claim have somewhere it came from?** Not a citation-shaped string —
+a source that survives the check. Follow one at random and read the passage. Do
+this at least once an hour; it is the fastest way to find out that something
+upstream broke.
+
+**Would you defend it to the person it is about?** If the agent says students
+prefer X, would you say that to a room of students with the evidence you have?
+If not, the agent should have said it could not establish it, and the fact that
+it did not is a design problem, not a prompt-tuning problem.
+
+**Write down what you rejected and why.** Three or four notes across the two days
+is enough, and it is most of your team's design rationale for free. It also
+stops the argument where someone changes a prompt back because they forgot why
+it was changed.
+
+---
+
+## What you hand to the rest of the team
+
+To the builder: the records and their fields, the rules in plain sentences, and
+the corpus. To the verifier: what a good answer looks like, so they know what
+they are watching for. Neither needs your reasoning — but both need to be able
+to ask for it, so stay in the room.
+
+---
