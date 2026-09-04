@@ -5,11 +5,11 @@
 Read this first: you have the highest-leverage job on the team, and almost
 nobody does it well.
 
-Roughly **40% of what you are judged on** is not the code. It is evidence that
+Roughly **a third of what you are judged on** is not the code. It is evidence that
 real people used your agent, that you learned something from watching them, and
 that you changed the thing in response. That work cannot be done on Sunday
 morning. It cannot be invented. And every year, most teams pile everyone onto
-features until hour forty and then produce it in a panic — which is visible
+features until the last afternoon and then produce it in a panic — which is visible
 instantly to anyone who has ever done user research.
 
 If you take this role seriously, your team will stand out. Not because the
@@ -19,18 +19,18 @@ others cannot do it, but because they will not have.
 
 ## Before the event — two weeks, three hours
 
-The event is on 19-20 September. This role rewards preparation more than any
-other, because the thing you need on the night is **people**, and people need
+The event runs 9-6 on 19 and 20 September. This role rewards preparation more
+than any other, because the thing you need on the night is **people**, and people need
 notice.
 
 ### 1. Book your testers now
 
 You need **three fellow students** for twenty minutes each during the event, and
-**one hostile classmate** for fifteen minutes. Ask them this week. Put it in
-their calendar.
+**one hostile classmate** for fifteen minutes. Ask them this week, and be specific -
+the venue empties at six, so a vague "sometime on Saturday" gets you nobody.
 
 Everyone gets busy and distracted during a hackathon, and "can someone try my
-thing?" shouted across a room at hour thirty gets you a polite nod and nobody
+thing?" shouted across a room late on day two gets you a polite nod and nobody
 turning up. A name and a time gets you data.
 
 Pick people **outside your team** who have not heard you explain the idea. For
@@ -98,7 +98,7 @@ than defend their first design.
 ## How to run a walkthrough
 
 You need three people, twenty minutes each. Do the first one **as soon as
-anything works at all** — hour twelve, not hour forty. A rough thing tested
+anything works at all** — day one, not the last afternoon. A rough thing tested
 early beats a polished thing tested never.
 
 **Recruit from outside your team.** Someone who has not heard you explain it.
@@ -166,7 +166,7 @@ asked for. One good one beats five vague ones.
 
 ## The design rationale
 
-One page. Four headings. Write it at hour forty, not hour forty-seven.
+One page. Four headings. Write it on the second afternoon, not in the last half hour.
 
 **What it does.** Two sentences, in plain language, no jargon. If you cannot
 explain it to someone from another department, the team does not understand it
@@ -211,20 +211,25 @@ show you tested early and iterated, rather than assembling a story on Sunday.
 
 ---
 
-## Your hour-by-hour
+## Your two days
+
+The event runs **9-6 on each of the two days**, with the evening in between free
+to carry on remotely if your team wants to. Your work is front-loaded: the first
+walkthrough is worth more than the last three combined, because it still has
+time to change something.
 
 | when | you |
 |---|---|
-| **H0–4** | Sit with the build. Understand what it is meant to do — you are about to explain it, or deliberately not explain it, to strangers |
-| **H8–12** | Line up your three walkthrough people and one hostile classmate. Book them now; they get busy |
-| **H12–16** | **First walkthrough, on whatever exists.** Yes, it is rough. That is the point |
-| **H16–20** | Feed findings back. Make sure one change lands and the commit says why |
-| **H24–30** | Walkthroughs two and three |
-| **H30–36** | Stress test, then the fix commit |
-| **H36–42** | Design rationale. Handoff test with an outside team |
-| **H42–48** | Rehearse the demo. Time it. Then time it again |
+| **Day 1, first hour** | Sit with the build. Understand what it is meant to do - you are about to hand it to strangers and deliberately not explain it |
+| **Day 1, before lunch** | Lock in your three walkthrough people and one hostile classmate. Names and times, while everyone is still findable and not yet buried |
+| **Day 1, afternoon** | **First walkthrough, on whatever exists.** Yes, it is rough. That is the point |
+| **Day 1, last hour or that evening** | Feed the findings back. Make sure one change lands and the commit message says which walkthrough caused it |
+| **Day 2, morning** | Walkthroughs two and three |
+| **Day 2, early afternoon** | Stress test, then the fix commit that answers it |
+| **Day 2, mid afternoon** | Design rationale. Handoff test with another team |
+| **Day 2, last hour** | Rehearse the demo. Time it. Then time it again |
 
-If the build is late and you are tempted to skip the first walkthrough — don't.
-A twenty-minute session on something half-broken at hour twelve routinely
-changes what a team builds for the next thirty. That is the whole point of doing
-it early, and it is worth more than the feature you would have shipped instead.
+If the build is late and you are tempted to skip the day-one walkthrough - don't.
+Twenty minutes on something half-broken, while there is still a whole day left,
+routinely changes what a team builds next. That is the entire reason to do it
+early, and it is worth more than the feature you would have shipped instead.

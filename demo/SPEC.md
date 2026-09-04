@@ -410,7 +410,7 @@ part to cut if time runs short, and it degrades gracefully.
 | H8–9 | **Recheck**, in both directions | the punchline |
 
 **Do not start with prompts.** Get the boring path working with stubs first.
-Teams that start with prompts rewrite everything around hour thirty, and so
+Teams that start with prompts rewrite everything on the second morning, and so
 will you.
 
 ---

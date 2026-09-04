@@ -19,7 +19,7 @@ keys, no installation, free tiers are fine.
 **Two hours, not two weeks.** Five short sessions. A polished twelve-page spec
 is worse than a rough two-page one, because you will defend it instead of
 testing it. You are producing a *hypothesis*, and the first person who tries
-your agent at hour twelve should be allowed to demolish it.
+your agent on day one should be allowed to demolish it.
 
 **Separate sessions, not one marathon.** Chats degrade over long conversations
 and free tiers have limits. Do one session, save the output, start a fresh chat
@@ -203,7 +203,7 @@ of a real build.
 Two more things to do with it.
 
 **Bring it to the event, and expect to change it.** The first person who tries
-your agent at hour twelve will find something the spec got wrong. That is the
+your agent on day one will find something the spec got wrong. That is the
 spec working, not failing.
 
 **Do the verification list first.** Whatever is in section 11 — the claims about

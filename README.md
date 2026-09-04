@@ -1,6 +1,6 @@
 # Agentic Slice Kit
 
-A starter kit for building a **working agentic slice** in 48 hours.
+A starter kit for building a **working agentic slice** in two days.
 
 Not a framework. Not a library. About 400 lines you are expected to read,
 understand, and edit — because the architecture is the thing being taught, and
@@ -40,7 +40,7 @@ explains how — nine principles, tiered by build order, with the line of code
 each one lives on.
 
 **Read that document before you write anything.** It will save you the rewrite
-that happens around hour thirty to teams who start with prompts.
+that hits teams on the second morning who start with prompts.
 
 ---
 
@@ -67,9 +67,9 @@ preparation worth doing before the event - each guide opens with what to do in
 the fortnight beforehand.
 
 **If you write no code at all, take the third role.** It is not the consolation
-prize. Roughly 40% of what you are judged on is evidence that real people used
+prize. Roughly a third of what you are judged on is evidence that real people used
 your agent and that you changed it in response - and it is the part almost every
-team leaves until hour 40, by which point it is too late to do honestly.
+team leaves until the last afternoon, by which point it is too late to do honestly.
 
 ---
 
@@ -124,5 +124,5 @@ recorded stress test where a classmate tried to break your agent, and the fix
 commit that answers it; a short design rationale saying what your agent does and
 where its limits are; and a repo someone else could pick up and continue.
 
-Budget for that. Teams that treat hour 24 as a feature deadline rather than a
+Budget for that. Teams that treat the second morning as a feature deadline rather than a
 feedback deadline consistently ship the least convincing demos.

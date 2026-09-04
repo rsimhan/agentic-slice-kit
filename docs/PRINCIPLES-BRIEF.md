@@ -79,7 +79,7 @@ policy and views, with one or two agents in the middle.
 - **Prose between agents** — two lossy translations per hop, no place to catch a
   malformed handoff.
 - **Persona count as a proxy** — five characters is not five times as agentic.
-- **Framework before state model** — in 48 hours a framework costs more to learn
+- **Framework before state model** — in two days a framework costs more to learn
   than the code it replaces, and hides the thing you most need to think about.
 
 ## The discipline that matters most

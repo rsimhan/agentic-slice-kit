@@ -2,9 +2,10 @@
   "name": "Agentic Slice Kit",
   "build": { "dockerfile": "Dockerfile", "context": ".." },
 
-  // 2 cores keeps a student inside the free 120 core-hour monthly quota for a
-  // full 48-hour event, with about 12 hours of headroom. Do not raise this
-  // without reading docs/QUOTA.md first.
+  // 2 cores keeps a student inside the free 120 core-hour monthly quota. The
+  // event runs 9-6 on two days plus optional remote work, so realistic usage
+  // is well under the 60 hours a 2-core machine buys. Raising this to 4 cores
+  // halves that headroom - do it deliberately, not by reflex.
   "hostRequirements": { "cpus": 2 },
 
   "forwardPorts": [8000],

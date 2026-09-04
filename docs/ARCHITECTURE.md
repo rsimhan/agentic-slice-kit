@@ -185,7 +185,7 @@ an anecdote. See `confident-and-wrong.html`.
 
 ### 9. A defined failure behaviour per dependency
 
-Everything external will fail during 48 hours. Decide in advance, or discover it
+Everything external will fail over two days. Decide in advance, or discover it
 in front of judges.
 
 | | |
@@ -218,7 +218,7 @@ demo/       the domain   — rewrite this for your problem
 
 `slice/` is deliberately **not** a package you install. Copy it, read it, edit
 it. A library you import is a black box you do not learn from; nine hundred
-readable lines is something you can hold in your head by hour six.
+readable lines is something you can hold in your head by the first afternoon.
 
 Swap `demo/` for your problem and keep the machinery. If you find yourself
 editing `slice/` to make your domain fit, that is interesting — either you have
@@ -243,7 +243,7 @@ a malformed handoff can be caught.
 agentic. The measure is state transitions and tool calls, not how many system
 prompts are wearing a costume.
 
-**Framework before state model.** In 48 hours an orchestration framework costs
+**Framework before state model.** Over two days an orchestration framework costs
 more to learn than the hundred lines it replaces, and it hides the state model
 you most need to think about. Write the loop by hand. Adopt a framework on day
 three of a project, not hour three.

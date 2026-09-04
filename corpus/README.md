@@ -54,4 +54,4 @@ for q in ['<your assumption 1>', '<your assumption 2>', '<your assumption 3>']:
 ```
 
 **If an assumption returns nothing relevant, your corpus cannot support it.**
-Better to learn that now than at hour thirty.
+Better to learn that now than halfway through day two.

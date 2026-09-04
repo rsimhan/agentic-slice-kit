@@ -257,7 +257,7 @@ judgement call — which is your job, not the assistant's.
 
 **You start with prompts.** Prompts are the last thing, not the first. Get one
 boring path working end to end with a hard-coded fake answer, *then* make it
-clever. Teams that start with prompts rewrite everything around hour thirty.
+clever. Teams that start with prompts rewrite everything on the second morning.
 
 **You add agents instead of behaviour.** Five personas is not five times as
 agentic. What counts is state changes and tool calls, not how many instructions
