@@ -56,6 +56,10 @@ you have a better idea, but decide deliberately rather than by drift.
 | **The domain lead** | `demo/` - prompts, schema, the rules in `flow.py` | [`docs/QUICKSTART.md`](docs/QUICKSTART.md) |
 | **The evidence lead** | user tests, the stress test, the design rationale | [`docs/EVIDENCE.md`](docs/EVIDENCE.md) |
 
+Two of these three roles need **no programming at all**, and both have real
+preparation worth doing before the event - each guide opens with what to do in
+the fortnight beforehand.
+
 **If you write no code at all, take the third role.** It is not the consolation
 prize. Roughly 40% of what you are judged on is evidence that real people used
 your agent and that you changed it in response - and it is the part almost every

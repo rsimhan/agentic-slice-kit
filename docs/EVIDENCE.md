@@ -17,6 +17,61 @@ others cannot do it, but because they will not have.
 
 ---
 
+## Before the event — two weeks, three hours
+
+The event is on 19-20 September. This role rewards preparation more than any
+other, because the thing you need on the night is **people**, and people need
+notice.
+
+### 1. Book your testers now
+
+You need **three fellow students** for twenty minutes each during the event, and
+**one hostile classmate** for fifteen minutes. Ask them this week. Put it in
+their calendar.
+
+Everyone gets busy and distracted during a hackathon, and "can someone try my
+thing?" shouted across a room at hour thirty gets you a polite nod and nobody
+turning up. A name and a time gets you data.
+
+Pick people **outside your team** who have not heard you explain the idea. For
+the hostile one, pick someone who would genuinely enjoy breaking things.
+
+### 2. Practise a walkthrough on anything
+
+The skill is harder than it sounds and it is entirely learnable in one sitting.
+
+Find a friend and any app or website neither of you built — a college portal, a
+form, a booking site. Give them a task: *"book a room"*, *"find last year's
+paper"*. Then:
+
+- **Say nothing.** No hints, no explaining. This is the hard part.
+- Ask them to think out loud.
+- Write down where they hesitate, what they click that surprises you, what they
+  read twice.
+
+Do this once before the event and you will be dramatically better at it on the
+night. Most people cannot stay quiet for the first two minutes; that silence is
+where all the findings are.
+
+### 3. Learn the one thing that makes this work
+
+**What people say and what people do are different, and only what they do is
+data.** Someone will tell you your interface is clear and then spend forty
+seconds failing to find a button. Both happened. Only one matters.
+
+Your notes should be mostly verbs — *clicked, scrolled back, retyped, gave up,
+asked what that meant* — not adjectives. Adjectives are their opinion; verbs are
+the evidence.
+
+### 4. Read the topic brief properly
+
+Understand what your team is trying to build well enough to explain it to a
+stranger — because on the night you will be handing it to strangers and
+deliberately **not** explaining it. Knowing what it is meant to do is what lets
+you notice when it doesn't.
+
+---
+
 ## What you have to produce
 
 Four things. All four are explicitly required.
