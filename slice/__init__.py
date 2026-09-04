@@ -1,7 +1,7 @@
 """
 The spine.
 
-This package is deliberately NOT a library you install. It is ~400 lines you
+This package is deliberately NOT a library you install. It is ~1,100 lines you
 are expected to read, understand, and edit. Every architectural principle the
 kit teaches lives in here, and the whole point is that it fits in your head.
 

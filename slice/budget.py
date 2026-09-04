@@ -26,7 +26,7 @@ class BudgetExceeded(RuntimeError):
     """A fence was reached. Not an error in the usual sense - the system
     working as designed. Callers decide whether that means escalate, degrade,
     or stop, and the runner makes that decision explicitly rather than letting
-    an exception bubble into a stack trace a student has to decode at 3am."""
+    an exception bubble into a stack trace a tired student has to decode."""
 
     def __init__(self, kind: str, used: float, limit: float, detail: str = ""):
         self.kind, self.used, self.limit = kind, used, limit

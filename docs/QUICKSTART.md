@@ -16,47 +16,25 @@ downstream of them.
 
 ---
 
-## Before the event — two weeks, three hours
+## Before you open this
 
-You have until 19 September. These are worth more than any amount of tutorial.
+The design work happens somewhere else, and everyone on the team does it:
+[`DESIGN-YOUR-AGENT.md`](DESIGN-YOUR-AGENT.md) is five short sessions with any
+frontier chat that produce a spec — the problem, the states, the rules, the
+refusals. That is the fortnight's job, and it needs no keys and nothing
+installed.
 
-### 1. Pick your problem, and make it small
+This document is the other thing: getting a system running and understanding
+what it does. It takes about twenty minutes and works equally well the night
+before or on the first morning. Come back here when you have a browser and a
+spec you believe in.
 
-Not "improve education". One specific moment that annoys you: the lab report
-nobody knows how to structure, the first-year course where everyone fails the
-same question, the way project groups get assigned.
-
-**Write one paragraph** describing what happens today and why it is bad. If you
-can't do that in a paragraph, the problem is still too big.
-
-### 2. Write down the rules, in plain English
-
-This is the real work of the domain role, and it is entirely non-technical.
-
-Imagine your agent has produced an answer. **What would make it wrong?** Write
-five specific things — not "it's not good enough" but "it named a whole
-department instead of a specific person", "it gave the answer instead of asking
-a question", "it claimed something with no source".
-
-That list becomes the gate: the rules your agent is checked against. On the
-night, translating those five sentences into code is about twenty minutes. Not
-having thought about them is what costs teams their Saturday.
-
-### 3. Gather what your agent should read
-
-Ten to twenty documents about your problem. Syllabus pages, lab manuals, past
-papers, forum threads, notes from talking to three students about it. Plain text
-or markdown. **Notes from real conversations are worth more than anything
-official** — they contain the specifics that make an answer useful.
-
-### 4. Get fluent at directing an assistant
-
-Build something small this fortnight — a script that renames files, a page that
-shows a timetable. Anything. What you are practising is not coding; it is the
-habit of describing a task precisely enough that a machine can satisfy it, then
-reading what came back and saying what is wrong with it.
-
-That habit is the whole job, and two weeks of it is a lot.
+One thing worth starting early, because it cannot be done on the day: **collect
+the documents your agent will read.** Ten to twenty of them — syllabus pages,
+lab manuals, past papers, forum threads, notes from talking to three people
+about the problem. Plain text or markdown. Notes from real conversations are
+worth more than anything official, because they contain the specifics that make
+an answer useful.
 
 ---
 
@@ -84,7 +62,7 @@ python scripts/doctor.py
 
 It is a pre-flight check. Five things, in the order they actually break. It is
 worth understanding these, because **most of what looks like a broken agent at
-3am is a broken environment**, and the difference is an hour.
+hour six of day one is a broken environment**, and the difference is an hour.
 
 **1. Is your config file there, and does it have a key?**
 Without this nothing else can run. If you skipped the paste step, it says so.
@@ -107,7 +85,7 @@ to the built-in database and it either loads or it doesn't.
 The thing that converts text into a form you can search by meaning. It is baked
 into the environment so it works instantly and offline. If it is missing, your
 first document ingest will try to download 80MB — fine on good wifi, painful on
-venue wifi at midnight.
+venue wifi with two hundred people on it.
 
 **What you might see:**
 
@@ -119,7 +97,7 @@ venue wifi at midnight.
 | `refused for credit (402)` | Your cap can't cover a request this size | Lower `SLICE_MAX_TOKENS`, or get a top-up |
 | `unreachable (HTTP 000)` | Network problem, not a code problem | Check the wifi before you check your code |
 | `sqlite-vec will not load` | Something is wrong with the environment | Rebuild the Codespace; ask a mentor |
-| `embedding model not baked in` | Warning, not an error | It'll download on first use. Do it now, not at 2am |
+| `embedding model not baked in` | Warning, not an error | It'll download on first use. Do it now, not mid-build |
 
 **If the doctor is unhappy, stop and fix that.** Debugging your agent on a
 broken environment is the most expensive mistake available to you this weekend.
@@ -185,19 +163,48 @@ can tell whether your agent **found that in your documents** or **made it up**.
 Both look identical on the page. This is the single most common way agentic
 demos quietly mislead the people watching them.
 
-The citation removes the ambiguity. An output that says:
+The citation is what removes the ambiguity — but only once something checks
+it. An output that says:
 
 > Students consistently struggle with free-body diagrams
 > — `interviews.md#4`: *"three of the five students I spoke to redrew the
 > diagram before they could start the problem"*
 
-is **checkable**. A judge can follow it back. And when your agent genuinely
-cannot find support for something, it can say so, which is far more impressive
-than confident invention — it means your system knows the difference between
-what it found and what it assumed.
+is **checkable**. Which is not the same as checked, and the gap between those
+two words is where teams lose the argument.
 
-It costs you nothing. The citation is already attached to every passage; you
-only have to not throw it away.
+**Here is the part that catches almost everyone.** The model writes the
+citation. Search hands it some passages, the model then types out a source name
+and a quote, and nothing so far has compared the one to the other. A model can
+put `interviews.md#4` under a sentence that appears nowhere in `interviews.md#4`
+— fluent, plausible, formatted exactly like the real thing. Keeping the tag
+attached to the passage is necessary, and on its own it proves nothing. If the
+model is the only thing vouching for the model, you are back where you started.
+
+What actually establishes provenance is a short piece of ordinary code that runs
+after the model has answered and asks the model nothing:
+
+> Is the source it cited one of the passages this search actually returned?
+> And does the quote appear word for word inside that passage, ignoring
+> spacing?
+
+Both true, and the claim is supported — you can say so and mean it. Either one
+false, and the row is **demoted**: kept, relabelled *could not establish*, with
+a note saying which of the two checks failed.
+
+**Demoted, not deleted.** A citation that failed the check is a fact about your
+run, and quietly dropping it is how a team ends up with an artefact that looks
+better than the evidence under it. A judge who sees three supported rows and one
+honest "could not establish" trusts the three. Four immaculate rows give them no
+reason to trust any. And an agent that can say *I could not find support for
+this* is more impressive than confident invention, because it means the system
+knows the difference between what it found and what it assumed.
+
+This is one of the few places where you get certainty rather than judgement, and
+you get it precisely because no model is consulted. It is a small function; ask
+your assistant for it, or a mentor. Do it before the prompts get good, not
+after — a demo that claims provenance and a demo that has it look identical
+right up to the moment someone checks.
 
 ---
 
@@ -215,10 +222,28 @@ Three files. Everything else is machinery you can leave alone.
 prep work land. It holds decisions like "three failed reviews means escalate"
 and "a question the documents cannot answer goes to a human".
 
+There is a trap inside that first example. "Three failed reviews" is a rule
+about your problem, so it has to be counted from the record — how many verdicts
+are already written down for this item — and never from the attempt counter the
+kit uses to stop runaway spending. That counter is also ticking for retries
+after a garbled response. Point your rule at it and a run that hit two bad
+responses silently gets one review instead of three, which you find out on
+stage. A spending fence and a domain limit are both "a small number you stop
+at", and they must never be the same number.
+
 Those decisions are made in **code**, not by a model. The model supplies
 judgement inside a step — *is this thesis specific enough?* — and your rules
-decide what that judgement means. That separation is most of what distinguishes
-a system from a chatbot, and it is entirely a design question. It is your call.
+decide what that judgement means.
+
+That split is the right default **for a two-day build**, and it is worth being
+clear that it is a choice about time rather than a law. Letting a model decide
+what happens next is a legitimate technique and people build good systems that
+way. It simply costs more: when every run takes its own route, every route has
+to be traced, and the fences have to hold on paths nobody wrote down. Sequencing
+in code keeps the cost and the behaviour reviewable while you still have hours
+in which to review them. Start there. If there is a step where the model
+genuinely should be choosing, you will know exactly which one it is — and you
+will be able to say why, which is the answer a judge is listening for.
 
 ---
 
@@ -248,8 +273,17 @@ nobody will find it tomorrow. It is almost always the second.
 **Read what it wrote to check the decision, not the syntax.** You do not need
 to verify that the Python is valid; it will be. You need to notice that it wrote
 a retry loop with no limit, or caught an error and carried on as though nothing
-happened. Those are the bugs that cost you Saturday night, and spotting them is a
+happened. Those are the bugs that cost you an afternoon, and spotting them is a
 judgement call — which is your job, not the assistant's.
+
+**Watch for `assert` on anything a model produced.** Assistants reach for it
+constantly, and in a step that handles model output it is wrong twice over. A
+model returning something odd is an ordinary Tuesday, not a programming error,
+so an `assert` turns a normal bad answer into a stack trace with nothing written
+down about what happened. Worse, Python is allowed to skip `assert` lines
+entirely — run with `python -O` and your check is simply not there, silently.
+Whatever it was guarding should be recorded as a finding the run can carry, or
+raised as a named error your flow knows how to catch.
 
 ---
 
@@ -266,13 +300,13 @@ are wearing a costume.
 **You point at the expensive model.** `SLICE_MODEL` is cheap and was chosen by
 running an evaluation, not by reading a price list. `SLICE_ESCALATION_MODEL`
 costs roughly thirty times more per word. Escalate deliberately, for one hard
-sub-problem — not out of frustration at 3am.
+sub-problem — not out of frustration when something will not work.
 
 **You keep everything in the conversation.** It works until the first restart.
 Write it down; that is what the store is for.
 
 **You leave the users until the end.** See [`EVIDENCE.md`](EVIDENCE.md). It is
-worth more marks than your last feature and cannot be faked on Sunday morning.
+worth more marks than your last feature and cannot be faked on the second afternoon.
 
 ---
 
@@ -289,6 +323,15 @@ python -c "from slice.store import Store; \
 and when. Almost every "why on earth did it do that" question is answered by
 reading it. It is also the best thing to put on screen when you demo: judges
 want to see the agent **think**, not just its final answer.
+
+**One thing to know about reading state back.** Asking the store for the
+*latest* record of some kind means "the current one" only when there is a single
+one of that kind per run — the current draft, the current verdict. For anything
+you keep one of **per item** — an evidence row for each assumption — the latest
+row is just whichever item happened to be written last. Walk the full history
+for that kind and take the newest row per item instead. Get this wrong and you
+get a table where every row shows the same answer, and it looks convincingly
+like a prompt problem for about an hour.
 
 And if you are stuck for more than twenty minutes, ask a mentor. Twenty minutes
 is the right threshold — long enough to have genuinely tried, short enough that

@@ -19,13 +19,15 @@ prompt. A real agentic slice does at least one of these, and preferably all:
 
 ## Workflow or agent?
 
-**Can you draw the exact sequence of steps before you run it?** If yes, it is a
-workflow — a fixed path, the same every time. If no, because the number of loops
-and the choice of actions depend on what it finds, it is an agent.
+**An agent is a workflow that can go backwards.** The moment one step can look
+at another's output and send it back for revision, the route through the system
+depends on what the run found, not only on what you wrote.
 
-The same test, more usefully phrased for design: **an agent is a workflow that
-can go backwards.** The moment one step can look at another's output and send it
-back for revision, the number of steps stops being knowable in advance.
+What you are building is bounded stateful orchestration: transitions you fixed in
+advance, model-driven decisions *inside* them, at least one back-edge, and state
+that survives the process exiting. You should be able to draw the transitions —
+that is the point of drawing them. Which ones a given run takes, and how often,
+is what the run decides.
 
 If nothing in your design can send work backwards, you have not designed an
 agent yet.
@@ -33,19 +35,29 @@ agent yet.
 ## Build in this order
 
 Each tier is load-bearing for the next. A team that spends hour one on prompts
-and hour thirty on state rewrites everything.
+and the second morning on state rewrites everything.
 
 **Tier 1 — the skeleton.** Durable state outside the conversation. Typed records
-passed between steps, never prose. Bounded loops — every loop stops on
-attempts, tokens or time.
+at every boundary — between steps, out of the model, in from the corpus, and in
+from the human, whose prose is classified into a record before it is allowed to
+affect anything. Bounded loops of two kinds that must not share a counter: cost
+fences on tokens and attempts, and domain limits — *three revisions and stop* —
+counted from the record history. The loop bound goes in the schema, where it
+fails; in the prompt it is only a suggestion.
 
 **Tier 2 — makes it demonstrable.** Every claim cites a source a reader can
-open. Human-in-the-loop as a *state* the run suspends into and resumes from, not
-a blocking call. Tracing, so you can replay what happened.
+open, and code checks the citation against what retrieval actually returned —
+the model wrote that string, so it is not evidence until something verifies it.
+Human-in-the-loop as a *state* the run suspends into and resumes from, not a
+blocking call. Tracing, so you can replay what happened.
 
 **Tier 3 — makes it handoff-ready.** Orchestration in code, judgement in the
-model. At least one automated assertion. A defined failure behaviour for every
-external dependency.
+model — the right default over two days because it keeps cost and behaviour
+reviewable, not because a planner that logs its choices is illegitimate.
+Automated assertions, and at least one adversarial: the corpus is untrusted
+input, and retrieved text is data, never instructions. Never `assert` on model
+output in a handler — record the finding instead. A defined failure behaviour for
+every external dependency.
 
 ## Who is doing the thinking
 
@@ -73,8 +85,10 @@ policy and views, with one or two agents in the middle.
 
 ## Five anti-patterns
 
-- **The manager agent** — an LLM deciding which agent runs next. Unbounded and
-  undebuggable, because control flow differs every run.
+- **The manager agent with no fence** — an LLM deciding which agent runs next,
+  with no hop limit and no record of why it chose. The technique is real; the
+  version with neither a bound nor a trace is what empties your budget in two
+  days.
 - **Conversation as state** — works until the first restart.
 - **Prose between agents** — two lossy translations per hop, no place to catch a
   malformed handoff.

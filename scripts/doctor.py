@@ -4,7 +4,7 @@ doctor.py - Is this environment actually going to work?
 
 Runs automatically when you attach to the Codespace. Run it yourself any time
 something feels wrong, and BEFORE you start debugging your own code - most of
-what looks like a broken agent at 3am is a broken environment.
+what looks like a broken agent is often a broken environment.
 
 Checks, in the order that things actually fail:
   1. .env exists and has a key
@@ -148,7 +148,7 @@ print("-" * 60)
 if fails:
     print(f"{fails} problem(s) above" + (f", {skips} check(s) skipped" if skips else ""))
     print("Fix these BEFORE you start debugging your agent - most of what looks")
-    print("like a broken agent at 3am is a broken environment.\n")
+    print("like a broken agent is often a broken environment.\n")
 elif skips:
     print(f"no failures, {skips} check(s) skipped for want of a key\n")
 else:

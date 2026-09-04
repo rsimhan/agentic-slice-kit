@@ -22,7 +22,7 @@ import json, os, statistics, sys, time, urllib.error, urllib.request
 
 def load_env(path=".env"):
     """Read .env if present. The kit is configured by file, not by exported vars -
-    one less thing to get wrong at 3am, and it survives a new terminal tab."""
+    one less thing to get wrong under pressure, and it survives a new terminal tab."""
     try:
         for line in open(path):
             line = line.strip()

@@ -13,7 +13,7 @@ function, rather than sprinkled across the agents:
 That last one is worth reading twice. OpenRouter refuses a request BEFORE
 running it if the worst case exceeds the remaining balance - so a 402 arrives
 with nothing spent. But there are two reasons it can arrive, and they need
-opposite responses at 3am:
+opposite responses under pressure:
 
     your TEAM's key cap is spent    -> routine, go and get a top-up
     the SHARED account is empty     -> every team is about to stop, tell an

@@ -1,4 +1,4 @@
-"""The fences. If these do not hold, nothing stops a loop at 3am."""
+"""The fences. If these do not hold, nothing stops a loop."""
 import pytest
 
 from slice.budget import Budget, BudgetExceeded

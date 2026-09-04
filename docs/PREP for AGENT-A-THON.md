@@ -63,13 +63,13 @@ The strongest preparation isn't technical. One specific moment in teaching or le
 
 ### Design your agent before you arrive
 
-Two hours, no keys, no installation, no code. The starter kit includes a guided design session you run with any frontier chat — Claude, ChatGPT, Gemini, whichever you like.
+Three hours, no keys, no installation, no code, and everyone on the team can do it — together over a coffee, or alone and argue about it after. The starter kit includes a guided design session you run with any frontier chat — Claude, ChatGPT, Gemini, whichever you like.
 
 Five short conversations of about twenty minutes: narrow your problem until it's one specific person in one specific moment, decide what your agent does *and refuses to do*, design the states it moves through, work out what evidence it needs, and then — the useful one — instruct the model to attack your own design rather than polish it.
 
-You end up with a rough two-page spec that will be wrong in places. The guide makes you write down where, which is the point.
+You end up with a rough spec that will be wrong in places. The guide makes you write down where, which is the point — and it is the substance a preliminary submission has to be able to say. There's a worked example in the repo to read it against.
 
-Two things the guide keeps repeating. **Two hours, not two weeks** — a polished twelve-page spec is worse than a rough two-page one, because you'll defend it instead of testing it. And **argue with the model**, because it will agree with you by default and agreement is worth nothing. The guide gives you the specific questions to put to it.
+Two things the guide keeps repeating. **Three hours, not two weeks** — a polished twelve-page spec is worse than a rough three-page one, because you'll defend it instead of testing it. And **argue with the model**, because it will agree with you by default and agreement is worth nothing. The guide gives you the specific questions to put to it.
 
 ### Learn four ideas rather than four tools
 
@@ -81,7 +81,7 @@ Frameworks are a day-three decision, not an hour-three one. We'll show you a wor
 
 ### Get fluent at directing an assistant
 
-Build something small this fortnight — a quiz, a data cleaner, anything. **GitHub Copilot** (free with the Student Pack) or **Claude** are closest to what you'll have on the night.
+Build something small this fortnight — a quiz, a data cleaner, anything. **GitHub Copilot** (free with the Student Pack) or **Claude** are closest to what you'll have on the day.
 
 What you're practising isn't coding. It's describing a task precisely enough that a machine can satisfy it, then reading what came back and saying what's wrong with it. Three habits carry most of the difference between people who find these tools useful and people who find them maddening:
 
@@ -99,17 +99,42 @@ Optional, and free to ignore. It's a working agent with the awkward parts alread
 
 Two folders, and the split is the whole idea:
 
-**`slice/`** is the spine — about 400 lines that handle durable memory, typed handoffs between steps, spending limits, evidence retrieval, the state machine, and the pause-and-resume when a human is needed. Deliberately **not** a library you install. You copy it, read it, and edit it, because a black box you import is a black box you don't learn from.
+**`slice/`** is the spine — about 1,100 lines that handle durable memory, typed handoffs between steps, spending limits, evidence retrieval, the state machine, and the pause-and-resume when a human is needed. Deliberately **not** a library you install. You copy it, read it, and edit it, because a black box you import is a black box you don't learn from.
 
 **`demo/`** is the domain — the prompts, the rules, the problem being solved. That's the half you replace with your own.
 
-Open it in the browser and it runs; nothing installs on your laptop. Where to start depends on your seat:
+Open it in the browser and it runs; nothing installs on your laptop.
 
-| your job | start with |
-|---|---|
-| domain lead | `docs/DESIGN-YOUR-AGENT.md`, then `docs/QUICKSTART.md` |
-| evidence lead | `docs/EVIDENCE.md` |
-| builder | `docs/ARCHITECTURE.md` |
+### Everyone starts in the same place
+
+Whatever seat you end up in, the fortnight has one job: **decide what your agent
+is, and write it down.** That is [`docs/DESIGN-YOUR-AGENT.md`](https://github.com/rsimhan/agentic-slice-kit/blob/main/docs/DESIGN-YOUR-AGENT.md) — five short
+sessions you run with any frontier chat, no keys and nothing installed. Do it as
+a team over a coffee, or alone and argue about it afterwards.
+
+What comes out is a filled-in spec: a specific moment worth fixing, a state
+machine with a back-edge, three things your agent refuses to do, and an honest
+list of what you are unsure about. That is the substance a preliminary
+submission has to be able to say. The deck is the easy part once you have it.
+
+There is a worked example in the repo — `demo/SPEC.md` is the same template
+filled in for a real agent, section for section, so you can see how much detail
+is actually useful.
+
+### Then, once you have a spec
+
+The three guides below are for the days themselves. Open one the night before if
+you want a head start, but nothing here needs a fortnight.
+
+| if you are the one who… | read | what it gives you |
+|---|---|---|
+| decides what the agent should do, and what makes an answer wrong | `docs/QUICKSTART.md` | how the system works without the syntax, and a running agent in about twenty minutes |
+| puts it in front of real people and captures what happened | `docs/EVIDENCE.md` | how to run a walkthrough, what to write down, and why roughly a third of the marks live here |
+| gets the machinery running and reads the error at four o'clock | `docs/ARCHITECTURE.md` | a reading path into the spine, then nine principles and the line of code each one lives on |
+
+**One thing that cannot wait.** Whoever takes the evidence seat should line up
+their testers this week — three people for twenty minutes each during the event,
+and one willing to try to break it. Names and times, not a vague ask on the day.
 
 ---
 

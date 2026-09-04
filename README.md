@@ -2,11 +2,13 @@
 
 A starter kit for building a **working agentic slice** in two days.
 
-Not a framework. Not a library. About 400 lines you are expected to read,
+Not a framework. Not a library. About 1,100 lines you are expected to read,
 understand, and edit — because the architecture is the thing being taught, and
 you cannot learn an architecture you have imported.
 
-> **Status: spine complete, 23 tests passing. `demo/` is next.**
+> **Status: spine complete. 64 tests — 61 of them run with no key and no
+> network; the three in `tests/test_integration.py` need a live key and a
+> reachable provider. `demo/` is next.**
 
 ---
 
@@ -35,6 +37,13 @@ agentic slice demonstrates at least one of:
 - **multi-step reasoning or decomposition**
 - **human-in-the-loop callback mechanics**
 
+Useful as that list is, one line does most of the sorting: **an agent is a
+workflow that can go backwards.** Straight through A → B → C is a pipeline,
+however many models are in it. The moment a later step can hand work back to an
+earlier one and the run carries on from there, you have the thing. That
+back-edge is the cheapest part to leave out and the most expensive to retrofit,
+so decide early where yours is.
+
 This kit demonstrates all four, and [`docs/anatomy-of-an-agentic-slice.html`](docs/anatomy-of-an-agentic-slice.html)
 explains how — nine principles, tiered by build order, with the line of code
 each one lives on.
@@ -57,10 +66,11 @@ you have a better idea, but decide deliberately rather than by drift.
 | **The evidence lead** | user tests, the stress test, the design rationale | [`docs/EVIDENCE.md`](docs/EVIDENCE.md) |
 
 **Before the event:** [`docs/DESIGN-YOUR-AGENT.md`](docs/DESIGN-YOUR-AGENT.md)
-is a two-hour guided design session you can run with any frontier chat &mdash;
-no keys, no installation. It produces a rough spec for your own agent, and Raj
-Simhan has offered to review the ones teams send in. Optional, and the best two
-hours available to you in the fortnight before the event.
+is a guided design session &mdash; about three hours, any frontier chat, and
+everyone on the team can do it, together or apart &mdash;
+no keys, no installation. It produces a rough spec for your own agent — which
+is, near enough, what a strong preliminary submission has to say. Optional, and
+the best three hours available to you in the fortnight before the event.
 
 Two of these three roles need **no programming at all**, and both have real
 preparation worth doing before the event - each guide opens with what to do in
@@ -81,15 +91,18 @@ slice/      THE SPINE — read this, edit it, do not treat it as a black box
   store.py      durable append-only state               stdlib  246
   config.py     the one place .env is read              stdlib   64
   budget.py     the fences: attempts and tokens         stdlib   94
-  llm.py        the ONE place a model is ever called            249
+  llm.py        the ONE place a model is ever called            277
   retrieve.py   chunk / embed / search, in the same db          138
-  callback.py   suspend on a human, resume, time out            101
-  runner.py     the state machine                                81
+  callback.py   suspend on a human, resume, time out             81
+  runner.py     the state machine                               101
+  __init__.py   what this package is, and what it is not  stdlib   16
 
 demo/       THE DOMAIN — rewrite this for your own problem
 web/        the form a human expert answers on
-scripts/    ingest · start · resume · replay · bakeoff
-tests/      a golden case and five invariants
+scripts/    doctor · bakeoff · sync_architecture
+tests/      six files — the store, the fences, the callbacks, the runner,
+            a check that ARCHITECTURE.md still points at real code, and
+            one live-key integration test
 ```
 
 The split is the point. Swap `demo/` for your problem and keep the machinery.
@@ -111,8 +124,8 @@ oversized `max_tokens` produces a 402 while you still have credit. Leave
 
 **Default to the cheap model.** `SLICE_MODEL` is Flash-class and will carry
 almost everything. `SLICE_ESCALATION_MODEL` costs roughly thirty times as much
-per token. Escalate for the one hard subproblem, deliberately — not by habit at
-3am when something is not working.
+per token. Escalate for the one hard subproblem, deliberately — not by habit
+when something is not working and you are tired.
 
 ---
 
