@@ -56,6 +56,12 @@ you have a better idea, but decide deliberately rather than by drift.
 | **The domain lead** | `demo/` - prompts, schema, the rules in `flow.py` | [`docs/QUICKSTART.md`](docs/QUICKSTART.md) |
 | **The evidence lead** | user tests, the stress test, the design rationale | [`docs/EVIDENCE.md`](docs/EVIDENCE.md) |
 
+**Before the event:** [`docs/DESIGN-YOUR-AGENT.md`](docs/DESIGN-YOUR-AGENT.md)
+is a two-hour guided design session you can run with any frontier chat &mdash;
+no keys, no installation. It produces a rough spec for your own agent, and Raj
+Simhan has offered to review the ones teams send in. Optional, and the best two
+hours available to you in the fortnight before the event.
+
 Two of these three roles need **no programming at all**, and both have real
 preparation worth doing before the event - each guide opens with what to do in
 the fortnight beforehand.
