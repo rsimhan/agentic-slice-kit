@@ -8,7 +8,8 @@ why the agent is shaped the way it is and where its limits are.
 Read this first: you have the highest-leverage job on the team, and almost
 nobody does it well.
 
-Roughly **a third of what you are judged on** is not the code. It is evidence that
+Roughly **a third of what you are judged on** — the final weighting is published
+on [`ON-THE-DAY.md`](ON-THE-DAY.md) nearer the event — is not the code. It is evidence that
 real people used your agent, that you learned something from watching them, and
 that you changed the thing in response. That work cannot be done on Sunday
 morning. It cannot be invented. And every year, most teams pile everyone onto

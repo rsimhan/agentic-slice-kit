@@ -2,9 +2,11 @@
 
 **19 and 20 September.** Two days, 9:00 AM to 6:00 PM on site each day. The
 evening in between is yours — carry on remotely if your team wants to, or don't.
-**Info Session 1:** Saturday 5 September, 6:30 PM IST, with Dr. Viji Krishnamurthy (VP of AI, Oracle Industries) and Raj Simhan (CEG '96).
+**If you missed Info Session 1** — Dr. Viji Krishnamurthy (VP of AI, Oracle Industries) on the AI economy and the verification bottleneck, and Raj Simhan (CEG '96) on what separates an agent from everything else being called one — the recording is worth an hour. *\[recording link\]* This document assumes none of it, so you lose nothing by reading on.
 
 > One thing is worth doing this week rather than next: the **GitHub Student Developer Pack** application, because approvals have taken up to a fortnight and nothing else here has a queue in front of it. Details at the end.
+
+> **Keys, submission deadline, judging weights and who to ask on the day** are being settled with the organising team and land in `docs/ON-THE-DAY.md` in the repo next week. Nothing in the fortnight's work depends on them — but that is the page to check before you turn up.
 
 ---
 

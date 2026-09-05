@@ -5,7 +5,8 @@ lines — four pages in total is plenty. Delete every prompt in italics as you
 replace it.*
 
 *It is also, near enough, what a preliminary submission has to say — the college
-screens those before the event.*
+screens those before the event. Format, address and deadline appear on
+[`ON-THE-DAY.md`](ON-THE-DAY.md) during the week of 8 September.*
 
 **There is a worked example.** [`demo/SPEC.md`](../demo/SPEC.md) in this repo is
 this exact template, filled in for one real agent, with the JSON at every step.

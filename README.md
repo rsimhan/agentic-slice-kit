@@ -44,12 +44,15 @@ earlier one and the run carries on from there, you have the thing. That
 back-edge is the cheapest part to leave out and the most expensive to retrofit,
 so decide early where yours is.
 
-This kit demonstrates all four, and [`docs/anatomy-of-an-agentic-slice.html`](docs/anatomy-of-an-agentic-slice.html)
-explains how — nine principles, tiered by build order, with the line of code
-each one lives on.
+This kit demonstrates all four. [`docs/PRINCIPLES-BRIEF.md`](docs/PRINCIPLES-BRIEF.md)
+is the short version — the ideas, in a page or two, and the file to paste into a
+chat when you want a critic rather than an enthusiast.
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) is the long version: nine
+principles, tiered by build order, each anchored to the line of code it actually
+lives on.
 
-**Read that document before you write anything.** It will save you the rewrite
-that hits teams on the second morning who start with prompts.
+**Read the brief before you write anything.** It will save you the rewrite that
+hits teams on the second morning who start with prompts.
 
 ---
 
@@ -74,7 +77,9 @@ mattering on the first morning, not during the fortnight.
 
 The ideas the three guides assume are in
 [`docs/PRINCIPLES-BRIEF.md`](docs/PRINCIPLES-BRIEF.md) &mdash; short, and worth
-reading before any of them.
+reading before any of them. [`docs/ON-THE-DAY.md`](docs/ON-THE-DAY.md) is the
+operational page: keys, money, deadlines, what the two error codes mean, and who
+to ask when something non-technical is in your way.
 
 **The Verifier role is not the consolation prize.** Roughly a third of what you are judged on is evidence that real people used
 your agent and that you changed it in response - and it is the part almost every

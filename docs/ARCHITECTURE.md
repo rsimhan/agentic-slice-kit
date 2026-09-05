@@ -341,7 +341,7 @@ what it noticed.
 price table scored **0 of 3** — it could not produce parseable output at all.
 Running the same eval again with five trials instead of three found another
 model that complied only **2 times in 5**, at temperature zero. One clean run is
-an anecdote. See `confident-and-wrong.html`.
+an anecdote. Two runs disagreeing is data.
 
 ### 9. A defined failure behaviour per dependency
 
@@ -424,6 +424,7 @@ test of the property tests the property.
 
 ---
 
-*Companion documents: `anatomy-of-an-agentic-slice.html` for the principles
-in full, `confident-and-wrong.html` for what happened when we tested our own
-assumptions.*
+*Companion documents: [`PRINCIPLES-BRIEF.md`](PRINCIPLES-BRIEF.md) for the short
+version of all of this, [`BUILDER.md`](BUILDER.md) for the order to do it in, and
+[`../demo/SPEC.md`](../demo/SPEC.md) for one domain built on top of it — including
+the parts three independent reviews said were wrong.*

@@ -86,6 +86,59 @@ venue wifi with two hundred people on it.
 | `sqlite-vec will not load` | Something is wrong with the environment | Rebuild the Codespace; ask a mentor |
 | `embedding model not baked in` | Warning, not an error | It'll download on first use. Do it now, not mid-build |
 
+---
+
+### The settings, and the two you must not casually change
+
+`.env.example` is worth reading rather than just copying — it is the shortest
+document in the kit and it explains *why* every value is what it is, including
+the models we tried and rejected.
+
+**The models are already chosen, and they were chosen by measurement.**
+
+| variable | default | why |
+|---|---|---|
+| `SLICE_MODEL` | `inclusionai/ling-3.0-flash` | the workhorse. 8/8 on parse, schema and objection quality across two eval runs, ~2s per call, and the cheapest thing that behaved |
+| `SLICE_FALLBACK_MODEL` | `mistralai/mistral-small-3.2-24b-instruct` | deliberately a different provider family, so an outage on one is not an outage on both |
+| `SLICE_ESCALATION_MODEL` | `anthropic/claude-haiku-4.5` | roughly thirty times the cost per word. For one hard sub-problem, deliberately |
+
+**Do not swap `SLICE_MODEL` for something you saw on a leaderboard without
+re-running `scripts/bakeoff.py`.** This is not caution for its own sake — one
+model picked off a price table, with excellent headline specs, returned
+unparseable output on one run and rate-limited on the next. Zero out of three.
+Dropped into a gate loop it does not fail loudly; it returns nothing and your
+agent quietly stops working. `.env.example` lists what was rejected and why,
+including one model rejected for the wrong reason and worth re-testing.
+
+Two more rules that cost us time: **never a `:batch` variant** — those are not
+callable through the normal endpoint — and **never a `~...latest` alias**, because
+a judge re-running your demo has to get the behaviour you demonstrated.
+
+**The four fences.** Lower them freely; raise them deliberately.
+
+| variable | default | what it does |
+|---|---|---|
+| `SLICE_MAX_TOKENS` | 1200 | output ceiling per request. Too low and a verbose model gets cut off mid-JSON — you will see a `Truncated` error, which is the kit telling you the parameter is wrong rather than your prompt |
+| `SLICE_MAX_TOKENS_PER_RUN` | 250000 | the run-level fence. The thing that stops a loop costing real money |
+| `SLICE_MAX_ATTEMPTS_PER_STEP` | 3 | retries per step. **A cost fence, not a domain rule** — see below |
+| `SLICE_EXPERT_TIMEOUT_MINUTES` | 45 | how long a run waits on a human before continuing without them |
+
+**Tracing is optional and off.** `LANGFUSE_*` is blank by default and the tracer
+simply does nothing when it is — nothing breaks, and the organisers do not
+provide a shared host. If you want traces, a free Langfuse account takes a few
+minutes and the keys go in `.env`. Nothing in the reference implementation
+depends on it.
+
+**`MISTRAL_API_KEY` is optional too.** A free tier exists; it needs phone
+verification and a data-training opt-in, so do not put anything confidential
+through it.
+
+---
+
+**402 and 429 look identical and need opposite responses** — one is your key,
+one is the provider throttling everybody. [`ON-THE-DAY.md`](ON-THE-DAY.md) has
+the table now, and the top-up procedure once the desk is confirmed.
+
 **If the doctor is unhappy, stop and fix that.** Debugging your agent on a
 broken environment is the most expensive mistake available to you this weekend.
 
