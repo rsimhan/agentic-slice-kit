@@ -145,11 +145,32 @@ convenience, and this is where the convenience shows its edge.
 
 ## 5. Who is doing the thinking
 
-| step | the agent | the human | what the human loses if automated |
+| step | who does it **here** | who should | what is lost |
 |---|---|---|---|
-| structure the paragraph | ✓ | | nothing — it is transcription with a schema |
-| judge whether it is testable | ✓ | | quite a lot, in the real system. Here the gate is standing in for a mentor and the demo should say so |
-| decide whether to keep going | | ✓ | everything. The person reads the objections and rewrites |
+| structure the paragraph | agent | agent | nothing — it is transcription with a schema |
+| judge whether it is testable | agent | a mentor, really | quite a lot. The gate stands in for a person, and anyone showing this should say so out loud |
+| **revise after a block** | **agent** | **the founder** | **the point.** See below |
+
+**Be exact about the revision, because it is the one place this slice
+overstates itself.** When the gate blocks, nobody is asked anything. The same
+paragraph goes back to SPOT along with the objections, and SPOT re-reads it —
+looking for detail the first pass flattened. That is honest as far as it goes:
+extraction improving under critique, with nothing invented.
+
+But it is not the loop in [`SPEC.md`](SPEC.md), where **the founder** reads the
+objections and rewrites their own paragraph. That version cannot be simulated,
+because the new information comes from outside the system. A person who is told
+*"you named a category, not a person"* goes away and thinks about who they
+actually mean. SPOT cannot do that; it can only re-read.
+
+Which is exactly why live runs hit a ceiling, and why `needs_the_founder` exists.
+That guard is the system noticing it has reached the edge of what it can do
+without a person — and saying so, rather than turning the loop again.
+
+**So the honest claim for this slice is:** work goes backwards, and a bounded
+loop with durable state makes that safe. Not: the human is in the loop. The
+human is conspicuously absent, and the run tells you the moment that starts to
+matter.
 
 ## 6. The state machine
 
@@ -285,8 +306,11 @@ in this build and no ambiguity about which they are.
 
 1. **No corpus, no retrieval.** Nothing here needs evidence, so nothing here
    pretends to have any.
-2. **No human in the loop.** A gate standing in for a mentor is not a human in
-   the loop, and calling it one would be the first lie in the system.
+2. **No human in the loop — in either place one belongs.** A gate standing in
+   for a mentor is not a human in the loop. Neither is SPOT re-reading its own
+   paragraph after a block: in the real design the founder revises, and here
+   nobody is asked anything (§5). Calling either of them human-in-the-loop would
+   be the first lie in the system.
 3. **No decision about the venture.** It decides one thing: whether this thesis
    is specific enough to be worth testing. That is a workflow decision, in code,
    on the record.
