@@ -73,7 +73,16 @@ gate    PASS   . objections: []
 COMPLETE
 ```
 
-**The paragraph opens generically and buries the specifics at the end. That is
+**Three inputs, because one paragraph cannot prove everything.**
+
+```
+--case loop      (default)  blocks once on `problem`, recovers, PASS
+--case clean                passes first time; proves the happy path, no back-edge
+--case hopeless             blocks three times; proves the domain bound
+--idea "..."                your own
+```
+
+**The paragraph opens generically and buries the specifics further down. That is
 deliberate, and it is a bug fix.**
 
 An earlier version of this spec used a paragraph that was vague all the way
@@ -87,6 +96,11 @@ Which is the mistake this kit warns about, made by its own authors: **§4 was
 written by hand and never derived from the rules.** Two lessons worth more than
 a clean first run.
 
+Then the opposite happened. With the specifics made plainer, the model
+structured the record correctly on the **first** pass, the gate passed it, and
+the back-edge was never exercised — a clean `COMPLETE` that proved less than the
+failure had. The run said so itself: *one draft only, the loop is untested.*
+
 **A revision loop only works if a better answer is recoverable from the input.**
 If the founder genuinely never said it, no amount of looping produces it, and a
 system that appears to produce it anyway is inventing - which is the failure the
@@ -96,6 +110,15 @@ two sentences, badly framed. SPOT's second pass re-reads rather than invents.
 **And when it truly is not there, the honest output is to say so.** `spot.md`
 now instructs exactly that: write *"the founder did not say"* in the field
 rather than manufacture a specific to satisfy a gate.
+
+**The default case therefore carries exactly one weak field whose fix is buried
+in the text.** `problem` is stated vaguely in the founder's opening sentence and
+specifically halfway through the long one that follows. A first pass reliably
+takes the opening; the objection sends it back to the detail.
+
+Whether a given model takes that bait is a property of the model, not of this
+harness — so the run reports which happened, and `--case clean` and
+`--case hopeless` exercise the other two endings deliberately.
 
 ## 5. Who is doing the thinking
 

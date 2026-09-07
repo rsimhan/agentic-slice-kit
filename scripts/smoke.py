@@ -26,24 +26,47 @@ from slice.store import Store
 
 from demo.smoke.flow import build_flow
 
-DEFAULT_IDEA = (
-    "AI can help students find better internships. Students struggle with "
-    "placements and AI is growing fast. My friend Karthik has a 7.2 CGPA and "
-    "two shipped Android apps, and last year he got auto-rejected within an "
-    "hour by the campus portal every single time - he ended up getting his "
-    "internship through a senior instead. The portal started filtering below "
-    "8.0 in the 2025 cycle, before any recruiter opens the file."
-)
-"""The founder's paragraph opens generically and buries the specifics at the end.
+CASES = {
+    # The default. Everything the gate wants is in the paragraph, but the
+    # PROBLEM is stated vaguely up front and specifically halfway through a
+    # long sentence. A first pass reliably takes the opening; the objection
+    # sends it back to the detail. One block, one recovery, pass.
+    "loop": (
+        "AI can help fix campus placements - students struggle to get internships "
+        "and it is a real problem. Take my batchmate Karthik: 7.2 CGPA, two Android "
+        "apps live on the Play Store, and across the whole of last year's cycle he "
+        "was auto-rejected within an hour of applying, every single time, without a "
+        "human ever opening his file. He got in eventually through a senior. The "
+        "portal only started filtering below 8.0 from the 2025 cycle."
+    ),
+    # Passes first time. Proves the happy path and nothing else - no back-edge.
+    "clean": (
+        "AI can help students find better internships. Students struggle with "
+        "placements and AI is growing fast. My friend Karthik has a 7.2 CGPA and "
+        "two shipped Android apps, and last year he got auto-rejected within an "
+        "hour by the campus portal every single time - he ended up getting his "
+        "internship through a senior instead. The portal started filtering below "
+        "8.0 in the 2025 cycle, before any recruiter opens the file."
+    ),
+    # Cannot be saved. The gate blocks, SPOT has nothing to recover, three
+    # rounds and the domain bound stops the run with a recorded reason.
+    "hopeless": (
+        "AI can help students. Students have problems with placements and AI is "
+        "getting better every year, so there is a big opportunity here."
+    ),
+}
 
-That is deliberate, and it is the fix for a real bug. An earlier version led with
-the vague framing and contained nothing else - so when the gate demanded a person
-in a situation, SPOT had nowhere to get one, and correctly refused to invent it
-three times in a row. The golden example had been written by hand rather than
-derived from the rules, which is the exact mistake this kit warns about.
+"""Three inputs, because one paragraph cannot prove everything.
 
-A revision loop only works if a better answer is *recoverable from the input*.
-Here it is: everything the gate asks for is in the last two sentences."""
+A revision loop needs a weakness that is *fixable from the text*. Make the
+paragraph vague and there is nothing to recover; make it specific and there is
+nothing to block on. Observed both ways on live runs - three futile revisions in
+one direction, a first-pass PASS in the other.
+
+So the default carries one clearly weak field whose fix is buried further down.
+Whether a given model takes the bait is a property of the model, not of this
+harness, and the run reports which happened either way.
+"""
 
 DIM, BOLD, RESET = "\033[2m", "\033[1m", "\033[0m"
 GREEN, RED, AMBER = "\033[32m", "\033[31m", "\033[33m"
@@ -68,12 +91,13 @@ def cmd_run(args: argparse.Namespace) -> int:
 
     store = Store(args.db)
     run_id = store.create_run("smoke")
-    store.append(run_id, "input", {"text": args.idea}, produced_by="system")
+    idea = args.idea or CASES[args.case]
+    store.append(run_id, "input", {"text": idea}, produced_by="system")
 
     mode = "stub" if args.stub else st.model
     print(f"\n{_c('run', DIM)} {BOLD}{run_id}{RESET}   {_c(mode, DIM)}")
     import textwrap
-    for i, line in enumerate(textwrap.wrap(args.idea, 88)):
+    for i, line in enumerate(textwrap.wrap(idea, 88)):
         print(f"{_c('idea' if i == 0 else '    ', DIM)} {line}")
     print()
 
@@ -137,7 +161,10 @@ def main() -> int:
 
     r = sub.add_parser("run", help="draft, gate, revise, gate")
     r.add_argument("--stub", action="store_true", help="canned replies; no key needed")
-    r.add_argument("--idea", default=DEFAULT_IDEA)
+    r.add_argument("--case", choices=sorted(CASES), default="loop",
+                   help="loop: blocks once, then recovers (default). "
+                        "clean: passes first time. hopeless: blocks three times")
+    r.add_argument("--idea", default=None, help="your own paragraph, overrides --case")
     r.set_defaults(fn=cmd_run)
 
     rp = sub.add_parser("replay", help="every record of a run, in order")

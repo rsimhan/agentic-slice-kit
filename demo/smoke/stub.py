@@ -17,31 +17,29 @@ from pydantic import BaseModel
 # revised draft, pass.
 
 V1 = """{
-  "problem": "Students struggle to find internships that match what they can do",
-  "who_specifically": "Students",
-  "current_alternative": "They apply through the campus portal and wait",
-  "why_now": "AI is growing fast and changing hiring"
+  "problem": "Students struggle to get internships and it is a real problem",
+  "who_specifically": "Karthik, a batchmate with a 7.2 CGPA and two Android apps on the Play Store",
+  "current_alternative": "He applied through the campus portal",
+  "why_now": "The portal only started filtering below 8.0 from the 2025 cycle"
 }"""
-# A faithful first pass: it took the opening framing and flattened the last two
-# sentences, which is exactly what a real model does with this paragraph.
+# A faithful first pass. It found Karthik and it found the rule change - but it
+# took the PROBLEM from the founder's opening sentence and skipped the specific
+# version buried halfway through the long one. That is the weakness the gate
+# catches, and the fix is in the text.
 
 BLOCK = """{
   "status": "BLOCK",
   "objections": [
-    {"field": "who_specifically",
-     "problem": "\\"Students\\" is a category, not a person in a situation. Which student, at what moment, does this bite?"},
-    {"field": "why_now",
-     "problem": "\\"AI is growing fast\\" is a trend, not a change. Trends are always true, so they justify anything."},
     {"field": "problem",
-     "problem": "No observation would show this to be false. \\"Struggle to find internships\\" is true of almost everyone, so there is nothing to test."}
+     "problem": "No observation would show this to be false, because \\"struggle to get internships\\" is true of almost everyone. What specifically happens to Karthik that would not happen to a student the system works for?"}
   ]
 }"""
 
 V2 = """{
-  "problem": "Applications below the CGPA cutoff are rejected before a human reads them, so project work never gets seen",
-  "who_specifically": "A third-year with a 7.2 CGPA and two shipped side projects, applying through the campus portal",
-  "current_alternative": "They apply anyway, get auto-rejected within the hour every time, then get in through a senior instead",
-  "why_now": "From the 2025 placement cycle the portal auto-filters below 8.0 before any recruiter sees the file"
+  "problem": "Applications below the CGPA cutoff are auto-rejected within the hour, without a human ever opening the file, so project work is never seen",
+  "who_specifically": "Karthik, a batchmate with a 7.2 CGPA and two Android apps on the Play Store",
+  "current_alternative": "He applied through the portal all year, was auto-rejected every time, and got in through a senior instead",
+  "why_now": "The portal only started filtering below 8.0 from the 2025 cycle"
 }"""
 
 PASS = """{"status": "PASS", "objections": []}"""

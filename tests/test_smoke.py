@@ -41,7 +41,25 @@ def test_work_goes_backwards(tmp_path):
     store, run_id, _ = _run(tmp_path, Stub())
     drafts = store.history(run_id, "opportunity")
     assert len(drafts) == 2, "the gate did not send the draft back"
-    assert drafts[0].payload["who_specifically"] != drafts[1].payload["who_specifically"]
+    assert drafts[0].payload != drafts[1].payload, "the revision changed nothing"
+
+
+def test_the_revision_addresses_the_objection(tmp_path):
+    """Going backwards is not enough - it has to go backwards *usefully*.
+
+    Observed live: three revisions that repeated themselves, because the fix the
+    gate wanted was not in the founder's paragraph. A loop that turns without
+    changing the objected field is a loop that will exhaust its bound."""
+    store, run_id, _ = _run(tmp_path, Stub())
+    v1, v2 = [d.payload for d in store.history(run_id, "opportunity")]
+    objected = {o["field"] for o in store.history(run_id, "verdict")[0].payload["objections"]}
+
+    for field in objected:
+        assert v1[field] != v2[field], f"{field} was objected to and did not change"
+    untouched = set(v1) - objected
+    assert any(v1[f] == v2[f] for f in untouched), (
+        "every field changed; a revision should address the objections, "
+        "not silently rewrite the record")
 
 
 def test_both_verdicts_are_recorded_in_order(tmp_path):
@@ -62,7 +80,7 @@ def test_objections_are_specific_enough_to_act_on(tmp_path):
     record = store.history(run_id, "opportunity")[0].payload
     first = store.history(run_id, "verdict")[0].payload
 
-    assert len(first["objections"]) == 3
+    assert first["objections"], "a BLOCK with no objections tells the founder nothing"
     for o in first["objections"]:
         assert o["field"] in record, f"objection names no real field: {o}"
         assert len(o["problem"]) > 60, f"objection too thin: {o}"
