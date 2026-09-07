@@ -120,6 +120,29 @@ Whether a given model takes that bait is a property of the model, not of this
 harness — so the run reports which happened, and `--case clean` and
 `--case hopeless` exercise the other two endings deliberately.
 
+**And it did not take the bait.** `inclusionai/ling-3.0-flash` reads the buried
+clause and structures `problem` correctly on the first pass, every time. Which is
+the model doing its job well. Tuning the paragraph further, until a competent
+model stumbles, would be manufacturing a defect in order to demonstrate a
+recovery — the opposite of useful, and a short walk from a rigged demo.
+
+**So the block-then-recover arc is not reliably reproducible live, in one run,
+with a self-contained paragraph and a model that is any good.** That is worth
+knowing rather than working around. The three endings are each provable, just not
+simultaneously:
+
+| ending | how it is proven |
+|---|---|
+| passes first time | `--case clean`, live |
+| blocks, then recovers | `--stub`, deterministically, and by `tests/test_smoke.py` |
+| blocks until the bound stops it | `--case hopeless`, live |
+
+There is a deeper reason, and it is in [`SPEC.md`](SPEC.md). **In the real system
+the founder revises, not SPOT.** A person reads the objections and rewrites their
+own paragraph — a loop no model can short-circuit, because the missing
+information is genuinely outside the system. SPOT-revises was always a smoke-test
+convenience, and this is where the convenience shows its edge.
+
 ## 5. Who is doing the thinking
 
 | step | the agent | the human | what the human loses if automated |
@@ -302,7 +325,14 @@ without rewriting any of this.
 2. **Whether the three conditions are the right three.** They came from one
    person's experience, not from a labelled set.
 3. **Whether the objections are specific enough to act on.** *"Add more detail"*
-   is a failure even though it parses, and no schema catches it.
+   is a failure even though it parses, and no schema catches it. Observed
+   degrading over rounds, from explaining the fault to repeating the offending
+   value back. The test now strips the value and checks what is left — but only
+   a person reading the output can judge whether an objection is *useful*.
+
+4. **Whether SPOT should be revising at all.** In `SPEC.md` the founder revises;
+   here SPOT does, because a smoke test wants a self-contained loop. It is a
+   convenience, and every live run so far has pushed on exactly that seam.
 
 ## 16. Claims to verify
 
@@ -314,6 +344,8 @@ without rewriting any of this.
 | The default model returns a valid `OpportunityRecord` first try | run it; if it needs the repair pass every time, the prompt is wrong | ☐ |
 | The gate BLOCKs §4 v1 and PASSes §4 v2 | ten trials each. Below ~9/10 on either, fix the prompt before going further | ☐ |
 | **SPOT's v2 differs from v1** | observed failing: with a vague paragraph it correctly refuses to invent, and repeats itself until the limit stops the run. If v2 == v1, the input does not contain what the gate wants | ☐ |
+| A live run blocks at all | `--case hopeless`. Proves the gate can say no and not only yes, and that the domain bound fires with a recorded reason | ☐ |
+| A live run passes cleanly | `--case clean`. Two calls, no back-edge | ☐ |
 | **Objections still explain the fault by round three** | observed failing: the gate degraded to echoing the offending value back, which parses and says nothing. `tests/test_smoke.py` checks the shape; only a live run checks the judgement | ☐ |
 | Both provider families are reachable at once | observed failing on a first live run: primary and fallback both HTTP 429, and the recorded failure names only the fallback | ☐ |
 | A BLOCK genuinely re-enters `DRAFTING` and writes a second `opportunity` | `replay` shows two, not one. **This is the one that proves it is an agent** | ☐ |
