@@ -115,11 +115,24 @@ The split is the point. Swap `demo/` for your problem and keep the machinery.
 
 ## Three things that will bite you
 
-**Your Codespaces quota is finite.** 120 core-hours a month, which is 60 hours
-on the 2-core machine this repo asks for. Enough for the event with headroom —
-unless you leave codespaces running that you have abandoned. If you do get
-blocked, you can still export your work to a branch and a teammate can open a
-fresh codespace on it.
+**Your Codespaces quota is finite, and how much you get depends on your plan.**
+A free GitHub account includes 120 core-hours a month; the Student Developer Pack
+upgrades you to Pro, which includes more. On the 2-core machine this repo asks
+for, 120 core-hours is 60 hours of actual use. **Check your own** at
+[github.com/settings/billing](https://github.com/settings/billing) — the
+Codespaces tab shows what you have used against what is included, and it is the
+only figure that is definitely right for you.
+
+For scale: building and running this kit's smoke test across an afternoon —
+seven live runs, a full test suite, plenty of editing — came to about **four
+core-hours**. A team of four has room.
+
+What actually eats the allowance is not working, it is **walking away**. Closing
+the browser tab does not stop a codespace; it idles for 30 minutes first. Stop it
+from [github.com/codespaces](https://github.com/codespaces), and consider
+dropping the idle timeout to 5 minutes in your Codespaces settings. If you do get
+blocked, push your work to a branch and a teammate can open a fresh codespace on
+it.
 
 **Your API key has a hard cap.** It is enforced, and it refuses a request
 *before* running it if the worst case would exceed your balance — so an

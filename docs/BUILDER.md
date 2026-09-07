@@ -139,6 +139,29 @@ through it.
 one is the provider throttling everybody. [`ON-THE-DAY.md`](ON-THE-DAY.md) has
 the table now, and the top-up procedure once the desk is confirmed.
 
+---
+
+### Stopping the codespace, and why it matters
+
+A codespace bills for the time it is **running**, not the time you are using it.
+Closing the browser tab does not stop it — it idles for 30 minutes first, and
+those thirty minutes come out of a monthly allowance you share with nobody but
+still cannot get back.
+
+Stop it from [github.com/codespaces](https://github.com/codespaces): find the row
+for your codespace, click the `···` at the right-hand end, choose **Stop**. From
+inside, **F1** then *Codespaces: Stop Current Codespace* does the same. Stopping
+keeps the disk, so your `.env` and your key survive; deleting does not.
+
+Two numbers worth knowing. Check yours at
+[github.com/settings/billing](https://github.com/settings/billing) → Codespaces.
+A free account includes 120 core-hours a month, which is 60 hours on the 2-core
+machine this repo uses; the Student Pack upgrades you to more. Building and
+running the smoke test across an afternoon cost roughly **four**, so the
+allowance is not the constraint — abandoned codespaces are.
+
+---
+
 **If the doctor is unhappy, stop and fix that.** Debugging your agent on a
 broken environment is the most expensive mistake available to you this weekend.
 
