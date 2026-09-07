@@ -1,12 +1,13 @@
 # **CEG ASTRA — Agent-a-thon — Sep 2026**
 
 **19 and 20 September.** Two days, 9:00 AM to 6:00 PM on site each day. The
-evening in between is yours — carry on remotely if your team wants to, or don't.
-**If you missed Info Session 1** — Dr. Viji Krishnamurthy (VP of AI, Oracle Industries) on the AI economy and the verification bottleneck, and Raj Simhan (CEG '96) on what separates an agent from everything else being called one — the recording is worth an hour. *\[recording link\]* This document assumes none of it, so you lose nothing by reading on.
+evening in between is yours — carry on remotely if your team wants to.
+
+**If you missed Info Session 1** — Dr. Viji Krishnamurthy (VP of AI, Oracle Industries) on the AI economy, and Raj Simhan (CEG '96) on what separates an agent from everything else being called one — the recording is worth an hour. *\[check with your college organizing team for recording link\]*. This document assumes none of it, so you lose nothing by reading on.
 
 > One thing is worth doing this week rather than next: the **GitHub Student Developer Pack** application, because approvals have taken up to a fortnight and nothing else here has a queue in front of it. Details at the end.
 
-> **Keys, submission deadline, judging weights and who to ask on the day** are being settled with the organising team and land in `docs/ON-THE-DAY.md` in the repo next week. Nothing in the fortnight's work depends on them — but that is the page to check before you turn up.
+> **The preliminary 'Agent Specs' submission is due Tueday, 15 September, end of day.** The organising team will circulate a submission form nearer the date; Everything else operational — keys, judging weights, who to ask on the day — lands in `docs/ON-THE-DAY.md` in the repo next week.
 
 ---
 
@@ -41,7 +42,7 @@ Deep familiarity with a real situation is the scarcer ingredient, by a distance.
 
 ## **The three jobs in a team**
 
-Teams of four tend to split three ways. It's an observation, not a rule — but it's worth deciding deliberately rather than by drift, because the third one gets forgotten and it's the one that decides a lot of the outcome.
+Teams tend to split three ways. It's an observation, not a rule — but it's worth deciding deliberately rather than by drift, because the third one gets forgotten and it's the one that decides a lot of the outcome.
 
 **Designer.** Owns the problem and the spec. Decides what the agent should do, what a good answer looks like, what should make it refuse, and which rules it enforces. Writes the instructions the agent works from and judges whether its output is any good. Design work rather than coding, and the part no assistant can do for you — it depends on knowing what actually happens in the situation you're fixing.
 

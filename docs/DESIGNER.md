@@ -288,8 +288,14 @@ be — it is a reference implementation — but section for section it shows wha
 "enough detail" looks like, and each of its sections says what that section is
 *for*. Reading yours beside it will show you which of your sections is thin.
 
-**Send it in.** Submission address, format and deadline land on one page —
-[`ON-THE-DAY.md`](ON-THE-DAY.md) — during the week of 8 September. Put every team member's name on it — individual
+**Send it in by Monday 15 September, end of day.** The organising team will
+circulate a submission form; name your file `TeamName_CollegeCode`. Everything
+else about the day — keys, judging weights, who to ask — is on
+[`ON-THE-DAY.md`](ON-THE-DAY.md).
+
+Upload early rather than perfectly; you can replace it. What is being screened is
+whether you have a specific problem, a state model with a back-edge, and an honest
+list of what you are unsure about. Put every team member's name on it — individual
 contribution is what the Foundry selection looks at, and it cannot be seen if it
 was never written down.
 

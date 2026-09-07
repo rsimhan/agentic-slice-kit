@@ -23,15 +23,21 @@ itself is a short deck; the spec is the substance behind it.
 
 | | |
 |---|---|
-| **What to send** | ⚠️ *deck format, page or slide limit* |
-| **Where to send it** | ⚠️ *form link or address* |
-| **Deadline** | ⚠️ *date and time, with timezone* |
+| **Deadline** | **Monday 15 September, end of day IST** |
+| **How to submit** | ⚠️ *a Google Form the organising team will circulate — link here once it exists* |
+| **What to send** | ⚠️ *deck format and slide limit* |
+| **Name the file** | `TeamName_CollegeCode.pdf` — one file, so twenty-five submissions do not all arrive called `spec.pdf` |
 | **Shortlisting announced** | ⚠️ *date* |
 | **Questions about the submission** | `agentathon.cse@gmail.com` |
 
 **One team, one submission.** Put every team member's name on it — individual
 contribution is visible to the Foundry selection, and it cannot be visible if it
 is not recorded.
+
+**Upload early rather than perfectly.** The folder accepts a replacement, so a
+draft on Saturday and a better version on Monday beats nothing on Monday. What is
+being screened is whether you have a specific problem, a state model that can go
+backwards, and an honest list of what you are unsure about — not polish.
 
 ---
 
