@@ -123,9 +123,14 @@ for, 120 core-hours is 60 hours of actual use. **Check your own** at
 Codespaces tab shows what you have used against what is included, and it is the
 only figure that is definitely right for you.
 
-For scale: building and running this kit's smoke test across an afternoon —
-seven live runs, a full test suite, plenty of editing — came to about **four
-core-hours**. A team of four has room.
+For scale, measured on this repo in September 2026: **a two-hour working session
+on the 2-core machine costs 4.1 core-hours** — roughly 3% of a free account's
+monthly allowance, at $0.18 an hour. Storage over the same period was 0.28
+GB-hours, which is nothing. That is about thirty sessions a month before the free
+tier runs out, so a team has room for the event several times over.
+
+Billing lags a day or so, so a session you have just finished will not show up
+straight away.
 
 What actually eats the allowance is not working, it is **walking away**. Closing
 the browser tab does not stop a codespace; it idles for 30 minutes first. Stop it

@@ -156,9 +156,11 @@ keeps the disk, so your `.env` and your key survive; deleting does not.
 Two numbers worth knowing. Check yours at
 [github.com/settings/billing](https://github.com/settings/billing) → Codespaces.
 A free account includes 120 core-hours a month, which is 60 hours on the 2-core
-machine this repo uses; the Student Pack upgrades you to more. Building and
-running the smoke test across an afternoon cost roughly **four**, so the
-allowance is not the constraint — abandoned codespaces are.
+machine this repo uses; the Student Pack upgrades you to more. Measured here in
+September 2026: **a two-hour session came to 4.1 core-hours**, at $0.18 an hour,
+with storage a rounding error. So the allowance is not the constraint —
+abandoned codespaces are. Note that billing lags a day, so what you just did
+will not appear straight away.
 
 ---
 
