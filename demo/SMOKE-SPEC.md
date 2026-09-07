@@ -41,30 +41,61 @@ slice. Everything else here exists to make the loop safe.
 ## 4. A complete walkthrough
 
 ```
-idea    "AI can help students find better internships. Students struggle
-         with placements and AI is growing fast."
+idea    "AI can help students find better internships. Students struggle with
+         placements and AI is growing fast. My friend Karthik has a 7.2 CGPA
+         and two shipped Android apps, and last year he got auto-rejected
+         within an hour by the campus portal every single time - he ended up
+         getting his internship through a senior instead. The portal started
+         filtering below 8.0 in the 2025 cycle, before any recruiter opens
+         the file."
 
 v1      problem              students struggle to find internships
-        who_specifically     students                             ← category
-        current_alternative  they apply online
-        why_now              AI is growing fast                   ← a trend
+        who_specifically     students                             <- category
+        current_alternative  they apply through the portal and wait
+        why_now              AI is growing fast                   <- a trend
 
-gate    BLOCK  · "who_specifically" names a category, not a person in a situation
-               · "why_now" is a trend, not a change
-               · no claim here could be shown to be false
+        ^ a faithful first pass: it took the opening framing and flattened
+          the last two sentences. Which is where everything useful was.
 
-v2      who_specifically     a 7.2-CGPA third-year who is filtered out before
-                             a human reads the application
-        why_now              from 2025 the campus portal auto-rejects below 8.0
-        ...
+gate    BLOCK  . who_specifically names a category, not a person in a situation
+               . why_now is a trend, not a change
+               . no claim here could be shown to be false
 
-gate    PASS   · objections: []
+v2      who_specifically     a third-year with a 7.2 CGPA and two shipped apps,
+                             applying through the campus portal
+        current_alternative  auto-rejected within the hour every time, then in
+                             through a senior instead
+        why_now              from the 2025 cycle the portal filters below 8.0
+                             before a recruiter opens the file
+
+gate    PASS   . objections: []
 
 COMPLETE
 ```
 
-Derive the run from the rules, not the rules from the run. If your output differs
-from this, decide which of the two is wrong **before** touching code.
+**The paragraph opens generically and buries the specifics at the end. That is
+deliberate, and it is a bug fix.**
+
+An earlier version of this spec used a paragraph that was vague all the way
+through, and a v2 that introduced a CGPA, a portal and a date **that appeared
+nowhere in the input.** Run live, SPOT correctly refused to invent them - three
+times, at ten thousand tokens, until the revision limit stopped the run. It was
+obeying `prompts/spot.md`, which forbids adding a fact the founder did not
+supply. The prompt was right; the golden example was wrong.
+
+Which is the mistake this kit warns about, made by its own authors: **§4 was
+written by hand and never derived from the rules.** Two lessons worth more than
+a clean first run.
+
+**A revision loop only works if a better answer is recoverable from the input.**
+If the founder genuinely never said it, no amount of looping produces it, and a
+system that appears to produce it anyway is inventing - which is the failure the
+whole design exists to prevent. Here everything the gate demands is in the last
+two sentences, badly framed. SPOT's second pass re-reads rather than invents.
+
+**And when it truly is not there, the honest output is to say so.** `spot.md`
+now instructs exactly that: write *"the founder did not say"* in the field
+rather than manufacture a specific to satisfy a gate.
 
 ## 5. Who is doing the thinking
 
@@ -259,6 +290,9 @@ without rewriting any of this.
 | The whole loop runs on `--stub` with no key set | `python -m scripts.smoke run --stub` | ☐ |
 | The default model returns a valid `OpportunityRecord` first try | run it; if it needs the repair pass every time, the prompt is wrong | ☐ |
 | The gate BLOCKs §4 v1 and PASSes §4 v2 | ten trials each. Below ~9/10 on either, fix the prompt before going further | ☐ |
+| **SPOT's v2 differs from v1** | observed failing: with a vague paragraph it correctly refuses to invent, and repeats itself until the limit stops the run. If v2 == v1, the input does not contain what the gate wants | ☐ |
+| **Objections still explain the fault by round three** | observed failing: the gate degraded to echoing the offending value back, which parses and says nothing. `tests/test_smoke.py` checks the shape; only a live run checks the judgement | ☐ |
+| Both provider families are reachable at once | observed failing on a first live run: primary and fallback both HTTP 429, and the recorded failure names only the fallback | ☐ |
 | A BLOCK genuinely re-enters `DRAFTING` and writes a second `opportunity` | `replay` shows two, not one. **This is the one that proves it is an agent** | ☐ |
 | Three blocks stop the run in `FAILED` with a `failure` record | feed it a paragraph that cannot be saved | ☐ |
 | The store refuses an update | try to overwrite a version; expect the trigger to abort | ☐ |

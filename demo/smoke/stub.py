@@ -22,6 +22,8 @@ V1 = """{
   "current_alternative": "They apply through the campus portal and wait",
   "why_now": "AI is growing fast and changing hiring"
 }"""
+# A faithful first pass: it took the opening framing and flattened the last two
+# sentences, which is exactly what a real model does with this paragraph.
 
 BLOCK = """{
   "status": "BLOCK",
@@ -38,7 +40,7 @@ BLOCK = """{
 V2 = """{
   "problem": "Applications below the CGPA cutoff are rejected before a human reads them, so project work never gets seen",
   "who_specifically": "A third-year with a 7.2 CGPA and two shipped side projects, applying through the campus portal",
-  "current_alternative": "They apply anyway, get auto-rejections within the hour, then ask a senior for a referral",
+  "current_alternative": "They apply anyway, get auto-rejected within the hour every time, then get in through a senior instead",
   "why_now": "From the 2025 placement cycle the portal auto-filters below 8.0 before any recruiter sees the file"
 }"""
 

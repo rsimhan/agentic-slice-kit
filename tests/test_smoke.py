@@ -51,14 +51,28 @@ def test_both_verdicts_are_recorded_in_order(tmp_path):
 
 
 def test_objections_are_specific_enough_to_act_on(tmp_path):
-    """A schema cannot catch 'add more detail'. This is the cheapest proxy."""
+    """A schema cannot catch 'add more detail'. These are the cheapest proxies.
+
+    The echo check earns its place: on a live run the gate degraded over rounds
+    from explaining the fault to repeating the offending value back
+    ("Students (the category named by the founder)."), which parses perfectly
+    and tells the founder nothing. A length bar alone missed it by one
+    character."""
     store, run_id, _ = _run(tmp_path, Stub())
+    record = store.history(run_id, "opportunity")[0].payload
     first = store.history(run_id, "verdict")[0].payload
+
     assert len(first["objections"]) == 3
     for o in first["objections"]:
-        assert len(o["problem"]) > 40, f"objection too vague: {o}"
-        assert o["field"] in {"problem", "who_specifically",
-                              "current_alternative", "why_now"}
+        assert o["field"] in record, f"objection names no real field: {o}"
+        assert len(o["problem"]) > 60, f"objection too thin: {o}"
+        # Quoting the offending text inside an explanation is good practice.
+        # The failure is an objection that is ONLY the value. So: remove the
+        # value and check that what remains still says something.
+        value = record[o["field"]].lower().rstrip(".")
+        remainder = o["problem"].lower().replace(value, "")
+        assert len(remainder) > 45, (
+            f"objection is mostly a restatement of the value, not a reason: {o}")
 
 
 def test_everything_is_attributed(tmp_path):

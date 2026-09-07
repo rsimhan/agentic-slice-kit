@@ -28,8 +28,22 @@ from demo.smoke.flow import build_flow
 
 DEFAULT_IDEA = (
     "AI can help students find better internships. Students struggle with "
-    "placements and AI is growing fast."
+    "placements and AI is growing fast. My friend Karthik has a 7.2 CGPA and "
+    "two shipped Android apps, and last year he got auto-rejected within an "
+    "hour by the campus portal every single time - he ended up getting his "
+    "internship through a senior instead. The portal started filtering below "
+    "8.0 in the 2025 cycle, before any recruiter opens the file."
 )
+"""The founder's paragraph opens generically and buries the specifics at the end.
+
+That is deliberate, and it is the fix for a real bug. An earlier version led with
+the vague framing and contained nothing else - so when the gate demanded a person
+in a situation, SPOT had nowhere to get one, and correctly refused to invent it
+three times in a row. The golden example had been written by hand rather than
+derived from the rules, which is the exact mistake this kit warns about.
+
+A revision loop only works if a better answer is *recoverable from the input*.
+Here it is: everything the gate asks for is in the last two sentences."""
 
 DIM, BOLD, RESET = "\033[2m", "\033[1m", "\033[0m"
 GREEN, RED, AMBER = "\033[32m", "\033[31m", "\033[33m"
@@ -58,7 +72,9 @@ def cmd_run(args: argparse.Namespace) -> int:
 
     mode = "stub" if args.stub else st.model
     print(f"\n{_c('run', DIM)} {BOLD}{run_id}{RESET}   {_c(mode, DIM)}")
-    print(f"{_c('idea', DIM)} {args.idea[:96]}")
+    import textwrap
+    for i, line in enumerate(textwrap.wrap(args.idea, 88)):
+        print(f"{_c('idea' if i == 0 else '    ', DIM)} {line}")
     print()
 
     final = runner.advance(store, run_id, build_flow(call), st)
