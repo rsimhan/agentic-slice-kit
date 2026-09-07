@@ -118,7 +118,8 @@ def cmd_run(args: argparse.Namespace) -> int:
             for o in v.payload["objections"]:
                 print(f"         {_c('-', DIM)} {o['field']}: {o['problem'][:76]}")
         elif v.kind == "failure":
-            print(f"  {_c('stop ', DIM)} {_c(v.payload['kind'], RED)} - {v.payload['detail']}")
+            colour = AMBER if v.payload["kind"] == "needs_the_founder" else RED
+            print(f"  {_c('stop ', DIM)} {_c(v.payload['kind'], colour)} - {v.payload['detail']}")
 
     tokens = store.counter(run_id, "tokens")
     ok = final is RunState.COMPLETE

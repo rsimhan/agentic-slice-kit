@@ -108,17 +108,30 @@ def test_tokens_are_counted_against_the_run(tmp_path):
 # --------------------------------------------------------------- failure paths
 
 class AlwaysBlocks(Stub):
-    """A thesis that cannot be saved. Proves the domain bound, not the budget."""
+    """A founder who keeps trying and never gets there.
+
+    Each draft is genuinely different - otherwise the no-progress guard would
+    stop the run first, which is a different failure with a different remedy.
+    This one proves the domain bound: three real attempts, none good enough."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.n = 0
 
     def __call__(self, **kw):
-        if kw.get("step") == "gate":
-            kw["budget"].record_tokens(10)
-            return kw["schema"].model_validate_json(BLOCK)
         kw["budget"].record_tokens(10)
-        return kw["schema"].model_validate_json(V1)
+        if kw.get("step") == "gate":
+            return kw["schema"].model_validate_json(BLOCK)
+        self.n += 1
+        import json
+        d = json.loads(V1)
+        d["problem"] = f"{d['problem']} (attempt {self.n})"
+        return kw["schema"].model_validate(d)
 
 
-def test_three_blocks_stop_the_run_with_a_reason(tmp_path):
+def test_three_real_attempts_stop_the_run_with_a_reason(tmp_path):
+    """The domain bound, not the budget. Three genuine revisions, none good
+    enough, and the run stops saying so rather than turning forever."""
     store, run_id, final = _run(tmp_path, AlwaysBlocks())
     assert final is RunState.FAILED
     assert len(store.history(run_id, "verdict")) == MAX_REVISIONS
@@ -136,3 +149,39 @@ def test_history_cannot_be_rewritten(tmp_path):
             "UPDATE versions SET payload_json='{}' WHERE run_id=? AND seq=1", (run_id,))
     with pytest.raises(sqlite3.IntegrityError):
         store.db.execute("DELETE FROM versions WHERE run_id=?", (run_id,))
+
+
+class Repeats(Stub):
+    """SPOT can only report an absence, so every draft is identical.
+
+    Observed live with a paragraph containing nothing the gate wanted. The run
+    turned the loop three times and produced the same four objections twice."""
+
+    SAME = """{
+      "problem": "The founder did not specify what problem",
+      "who_specifically": "The founder did not specify a person in a situation",
+      "current_alternative": "The founder did not specify",
+      "why_now": "The founder did not specify a dated change"
+    }"""
+
+    def __call__(self, **kw):
+        kw["budget"].record_tokens(10)
+        if kw.get("step") == "gate":
+            return kw["schema"].model_validate_json(BLOCK)
+        return kw["schema"].model_validate_json(self.SAME)
+
+
+def test_a_revision_that_changes_nothing_stops_the_run(tmp_path):
+    """A loop that repeats itself will repeat itself again. Stopping on the
+    second identical draft costs one round instead of three, and says something
+    more useful: the answer is not in the paragraph, go and ask."""
+    store, run_id, final = _run(tmp_path, Repeats())
+    assert final is RunState.FAILED
+
+    failure = store.history(run_id, "failure")[-1].payload
+    assert failure["kind"] == "needs_the_founder"
+    assert failure["missing"], "the founder is not told which fields to go and answer"
+
+    # It stopped early rather than burning the whole allowance.
+    assert len(store.history(run_id, "opportunity")) == 2
+    assert len(store.history(run_id, "verdict")) < MAX_REVISIONS

@@ -91,6 +91,29 @@ def build_flow(call=complete):
         if verdict.status == "PASS":
             return RunState.COMPLETE
 
+        # A revision that changed nothing will not change anything next time
+        # either. Observed live: SPOT correctly reported "the founder did not
+        # specify X", the gate objected "the founder did not specify X", and the
+        # two of them repeated that exchange until the bound stopped the run -
+        # eleven thousand tokens to learn nothing after the first round.
+        #
+        # This is the unresolved-versus-contradicted distinction from SPEC.md
+        # 8.5, in miniature. A record that admits an absence is not wrong, it is
+        # incomplete, and the remedy is not another revision - it is a question
+        # for the founder. Stopping here says something useful; turning the loop
+        # again says the same thing more expensively.
+        drafts = ctx.history("opportunity")
+        if len(drafts) >= 2 and drafts[-1].payload == drafts[-2].payload:
+            missing = sorted({o["field"] for o in verdict.model_dump()["objections"]})
+            ctx.append("failure",
+                       {"kind": "needs_the_founder",
+                        "detail": "The revision was identical to the draft before it. "
+                                  "What the gate is asking for is not in the paragraph: "
+                                  + ", ".join(missing) + ". Go back to the founder.",
+                        "missing": missing},
+                       produced_by="system")
+            return RunState.FAILED
+
         # Counted from the record, not from the budget. See MAX_REVISIONS.
         blocks = sum(1 for v in ctx.history("verdict")
                      if v.payload["status"] == "BLOCK")

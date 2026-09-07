@@ -233,6 +233,21 @@ def handle_gating(ctx) -> RunState:
     return RunState.FAILED if blocks >= MAX_REVISIONS else RunState.DRAFTING
 ```
 
+**Two ways this can stop badly, and they are not the same thing.**
+
+`gate_exhausted` — three genuine attempts, none good enough. The founder tried.
+
+`needs_the_founder` — a revision came back **identical** to the one before it.
+That is a fixed point: SPOT has nothing left to work with, and turning the loop
+again produces the same exchange more expensively. Observed live, costing eleven
+thousand tokens across two rounds that discovered nothing after the first.
+
+The distinction matters because the remedies differ. One says *this thesis is not
+good enough yet*. The other says *the answer is not in your paragraph — go and
+find out*, and names the fields to go and answer. It is the
+unresolved-versus-contradicted distinction from [`SPEC.md`](SPEC.md) §8.5, in
+miniature: a record that admits an absence is not wrong, it is incomplete.
+
 Three block conditions, and they are the whole domain judgement in this slice:
 the customer is a **category** rather than a person in a situation; there is **no
 falsifiable claim**; the "why now" is a **trend**, not a change.
@@ -345,6 +360,7 @@ without rewriting any of this.
 | The gate BLOCKs §4 v1 and PASSes §4 v2 | ten trials each. Below ~9/10 on either, fix the prompt before going further | ☐ |
 | **SPOT's v2 differs from v1** | observed failing: with a vague paragraph it correctly refuses to invent, and repeats itself until the limit stops the run. If v2 == v1, the input does not contain what the gate wants | ☐ |
 | A live run blocks at all | `--case hopeless`. Proves the gate can say no and not only yes, and that the domain bound fires with a recorded reason | ☐ |
+| A stuck loop stops early | `--case hopeless` should now end in `needs_the_founder` after two drafts, not `gate_exhausted` after three. Observed costing 17,943 tokens before the guard; expect roughly a third of that | ☐ |
 | A live run passes cleanly | `--case clean`. Two calls, no back-edge | ☐ |
 | **Objections still explain the fault by round three** | observed failing: the gate degraded to echoing the offending value back, which parses and says nothing. `tests/test_smoke.py` checks the shape; only a live run checks the judgement | ☐ |
 | Both provider families are reachable at once | observed failing on a first live run: primary and fallback both HTTP 429, and the recorded failure names only the fallback | ☐ |
