@@ -22,8 +22,8 @@ This document outlines the sequential division of work across our 5 team members
 
 ## Member 2: Contract & Stub Architect (Data Models & Mocks)
 * **Files Owned:**
-  - `demo/feynman/schema.py`
-  - `demo/feynman/stub.py`
+  - `demo/feynman/schema.py` *(Created)*
+  - `demo/feynman/stub.py` *(Created)*
 * **Responsibilities:**
   - Implement the Pydantic schemas in `demo/feynman/schema.py`:
     - `CriticVerdict` (`verdict: Literal["MASTERED", "MISCONCEPTION", "AMBIGUOUS"]`, `detected_flaw_tag`, `flaw_explanation`, `violates_invariant`, `confidence`)
