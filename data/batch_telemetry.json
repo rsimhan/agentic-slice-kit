@@ -1,0 +1,24 @@
+{
+  "timestamp": "2026-09-19T07:14:31.683828+00:00",
+  "total_students_scanned": 4,
+  "cluster_count": 1,
+  "clusters": {
+    "TLB_MISS_EQUALS_DISK_IO": {
+      "fallacy_tag": "TLB_MISS_EQUALS_DISK_IO",
+      "occurrence_count": 3,
+      "affected_student_ids": [
+        "2023103057",
+        "20231035053",
+        "20231037154"
+      ],
+      "sample_student_quotes": [
+        "Cache miss at address translation level causes disk fetch because the translation failed.",
+        "A TLB miss causes the MMU to walk the page table in RAM. Disk I/O only occurs if the page table entry has valid bit e...",
+        "Virtual memory lets us run large programs. When the CPU looks for a virtual address, it checks the TLB. If it misses ...",
+        "Oh! The page might already be sitting in physical memory. The MMU just has to walk the page table in RAM first to get...",
+        "TLB miss means data is not in memory so OS goes to swap space to fetch the page."
+      ],
+      "remediation_suggestion": "Draw the 3-Tier Hierarchy on chalkboard:\n  (1) TLB Cache -> (2) RAM Page Table -> (3) Disk Swap.\nKey Takeaway: A TLB miss is resolved in RAM 99% of the time via page table walking without disk involvement. Disk read only occurs if Page Table valid bit is 0."
+    }
+  }
+}
