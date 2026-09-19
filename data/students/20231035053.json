@@ -1,0 +1,14 @@
+{
+  "student_id": "20231035053",
+  "concept_id": "virtual_memory",
+  "iteration_count": 1,
+  "initial_text": "Virtual memory lets us run large programs. When the CPU looks for a virtual address, it checks the TLB. If it misses the TLB, that's a page fault, so the operating system immediately pauses the process to fetch the missing block from the hard drive into RAM.",
+  "probes_issued": [
+    "Consider this scenario: The page containing your data was loaded into physical RAM five milliseconds ago by another thread, but this specific CPU core just cleared its TLB cache. If a TLB miss occurs right now, does the OS really need to read the physical disk? What step happens first in memory?"
+  ],
+  "student_revisions": [
+    "Oh! The page might already be sitting in physical memory. The MMU just has to walk the page table in RAM first to get the frame number. A disk read only happens if the present/valid bit in the page table itself is 0."
+  ],
+  "final_verdict": "MASTERED",
+  "tagged_fallacy": "TLB_MISS_EQUALS_DISK_IO"
+}
