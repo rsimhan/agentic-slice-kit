@@ -1,0 +1,46 @@
+[
+  {
+    "id": "campus-ux",
+    "title": "Campus UX Research Project",
+    "type": "student project",
+    "description": "Work with a campus team to research student experience problems and turn findings into practical improvements.",
+    "required_capabilities": [
+      "User Research",
+      "Communication",
+      "UX and flow design"
+    ]
+  },
+  {
+    "id": "student-innovation",
+    "title": "Student Innovation Challenge",
+    "type": "innovation challenge",
+    "description": "Build and test a small solution to a real student or campus problem.",
+    "required_capabilities": [
+      "User Research",
+      "Data organisation",
+      "UX and flow design"
+    ]
+  },
+  {
+    "id": "data-ops",
+    "title": "Campus Data Operations Project",
+    "type": "student project",
+    "description": "Help a campus organisation structure messy information into useful, consistent datasets.",
+    "required_capabilities": [
+      "Data organisation",
+      "Attention to detail",
+      "Communication"
+    ]
+  },
+  {
+    "id": "community-research",
+    "title": "Community Research Fellowship",
+    "type": "fellowship",
+    "description": "Conduct interviews, synthesise findings, and communicate evidence about a community problem.",
+    "required_capabilities": [
+      "User Research",
+      "Communication",
+      "Research"
+    ]
+  }
+]
