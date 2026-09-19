@@ -1,0 +1,16 @@
+{
+  "student_id": "20231037154",
+  "concept_id": "virtual_memory",
+  "iteration_count": 2,
+  "initial_text": "TLB miss means data is not in memory so OS goes to swap space to fetch the page.",
+  "probes_issued": [
+    "Consider this scenario: The page containing your data was loaded into physical RAM five milliseconds ago by another thread, but this specific CPU core just cleared its TLB cache. If a TLB miss occurs right now, does the OS really need to read the physical disk? What step happens first in memory?",
+    "Consider this scenario: The page containing your data was loaded into physical RAM five milliseconds ago by another thread, but this specific CPU core just cleared its TLB cache. If a TLB miss occurs right now, does the OS really need to read the physical disk? What step happens first in memory?"
+  ],
+  "student_revisions": [
+    "The CPU cache miss forces the OS to read secondary storage swap partition to find the frame.",
+    "The CPU cache miss forces the OS to read secondary storage swap partition to find the frame."
+  ],
+  "final_verdict": "UNRESOLVED_ESCALATE",
+  "tagged_fallacy": "TLB_MISS_EQUALS_DISK_IO"
+}

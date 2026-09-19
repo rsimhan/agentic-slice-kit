@@ -593,10 +593,13 @@ class StubCompleter:
 
         # Extract textual content from messages
         combined_text = ""
+        user_text = ""
         for m in messages:
             content = m.get("content", "")
             if isinstance(content, str):
                 combined_text += " " + content
+                if m.get("role") == "user":
+                    user_text += " " + content
 
         # Check for requested schema type
         schema_name = getattr(schema, "__name__", "")
@@ -606,7 +609,18 @@ class StubCompleter:
                 v = self._forced_verdict
                 self._forced_verdict = None
                 return v
-            return evaluate_student_text(combined_text)
+            # Extract target student text if embedded in prompt sections
+            text_to_eval = user_text if user_text else combined_text
+            if "### STUDENT SUBMISSION" in text_to_eval:
+                part = text_to_eval.split("### STUDENT SUBMISSION", 1)[1]
+                if ":" in part:
+                    part = part.split(":", 1)[1]
+                if "\n\n---" in part:
+                    part = part.split("\n\n---", 1)[0]
+                if "\n\nEvaluate" in part:
+                    part = part.split("\n\nEvaluate", 1)[0]
+                text_to_eval = part.strip().strip("\"'")
+            return evaluate_student_text(text_to_eval)
 
         if schema is ProbeMessage or schema_name == "ProbeMessage":
             if self._forced_probe is not None:

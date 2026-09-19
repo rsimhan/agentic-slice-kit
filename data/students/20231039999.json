@@ -1,0 +1,10 @@
+{
+  "student_id": "20231039999",
+  "concept_id": "virtual_memory",
+  "iteration_count": 0,
+  "initial_text": "Virtual memory partitions virtual addresses into VPN and offset. The MMU looks up the TLB. On a TLB miss, the MMU checks the page table in RAM to find the PFN. Only if the valid bit is 0 does a page fault occur, which traps to OS for disk I/O. The offset bits remain untouched.",
+  "probes_issued": [],
+  "student_revisions": [],
+  "final_verdict": "MASTERED",
+  "tagged_fallacy": null
+}
