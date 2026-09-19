@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+*.db
+*.db-wal
+*.db-shm
+out/
+.pytest_cache/
+.DS_Store
+bakeoff_raw.txt
