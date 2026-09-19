@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS student_profiles (
+  id TEXT PRIMARY KEY NOT NULL,
+  data TEXT NOT NULL,
+  version INTEGER NOT NULL DEFAULT 0,
+  lease_until INTEGER NOT NULL DEFAULT 0
+);

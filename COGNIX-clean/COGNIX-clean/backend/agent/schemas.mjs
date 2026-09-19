@@ -1,0 +1,3 @@
+import {HYPOTHESES,questions} from './catalog.mjs';
+export const interpretationSchema={type:'object',additionalProperties:false,properties:{classification:{type:'string',enum:['pass','fail','uncertain']},quote:{type:'string',maxLength:1000},note:{type:'string',maxLength:500}},required:['classification','quote','note']};
+export const planSchema={type:'object',additionalProperties:false,properties:{hypothesis:{type:'string',enum:Object.keys(HYPOTHESES)},question_id:{type:'string',enum:questions().map(q=>q.id)},question:{type:'string',minLength:8,maxLength:280}},required:['hypothesis','question_id','question']};
